@@ -1,0 +1,283 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.AppPage.HomePage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:entity="using:Projects.Core.Entity" 
+    xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:entityobj="using:Projects.Core.EntityObj" 
+    xmlns:helper="using:Projects.Core.Helper"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl"
+    mc:Ignorable="d" >
+
+    <Page.Resources>
+        <Style TargetType="Button" BasedOn="{StaticResource SymbolNoBGButtonStyle}">
+            <Setter Property="FontSize" Value="16"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+        </Style>
+       
+    </Page.Resources>
+
+    <Grid x:Name="HomePagePanel">
+
+        <Grid.RowDefinitions>
+            <RowDefinition Height="90"/>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid 
+              CornerRadius="4" Padding="10,0">
+            <Grid >
+                <Image x:Name="MoonBackgroundImage"
+                    Source="/Assets/MoonWithoutBackground.png"
+                    Height="70"
+                    Margin="0,0,100,0"
+                    HorizontalAlignment="Right"
+                    Opacity="0.2"
+                    Stretch="Uniform"
+                    Visibility="Collapsed"/>
+                <Image x:Name="SunBackgroundImage"
+                    Source="/Assets/SunWithoutBackground.png"
+                   Margin="0,0,100,0"
+                   Height="100"
+                   HorizontalAlignment="Right"
+                   Opacity="0.2"
+                   Stretch="Uniform"
+                   Visibility="Collapsed"/>
+                <Image Source="/Assets/CloudWithoutBG2.png"
+                   Margin="0,0,220,0"
+                       Height="80"
+                   HorizontalAlignment="Right"
+                   Opacity="0.1"
+                   Stretch="Uniform"/>
+                <Image Source="/Assets/CloudWithoutBG1.png"
+                   Margin="0,35,10,0"
+                   HorizontalAlignment="Right"
+                   Opacity="0.1"
+                   Stretch="Uniform"/>
+            </Grid>
+            <Grid Padding="0,10">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+                <userusercontrol:UserPersonPictureControl DataContext="{x:Bind  GetAppUser()}"
+                                                          FlyoutPosition="BottomEdgeAlignedLeft"
+                                                          Margin="0,5,0,0"
+                                                          ControlHeight="50"/>
+               
+                <StackPanel Grid.Column="1"
+                        Padding="15,0"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Center">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock  Text="{x:Bind GetAppUserName()}" 
+                                FontWeight="Medium" 
+                                FontSize="20"
+                                VerticalAlignment="Center"/>
+
+                        <TextBlock Text="{x:Bind GetAppUserMail()}" 
+                               FontSize="12"
+                               Foreground="Gray"
+                               Margin="5,5,0,0"
+                               VerticalAlignment="Center"/>
+                    </StackPanel>
+
+                    <TextBlock FontSize="16"
+                               FontWeight="Normal"
+                               Margin="0,5,0,0"
+                               Text="{x:Bind CurrentTimeString,Mode=OneWay}"/>
+
+                </StackPanel>
+
+
+
+               
+            </Grid>
+        </Grid>
+
+        <Grid Grid.Row="1"
+             
+              CornerRadius="4"
+              Margin="0,3,0,0">
+            <controls:AdaptiveGridView  x:Name="DashboardSummaryAdaptiveGridView"
+                                    DesiredWidth="700"
+                                    ItemHeight="80"
+                                    HorizontalAlignment="Stretch"
+                                    IsItemClickEnabled="False"
+                                    Margin="0,0,10,0"
+                                    Padding="0,0,0,10"
+                                    Loaded="DashboardSummaryAdaptiveGridView_Loaded"
+                                    OneRowModeEnabled="False"
+                                    SelectionMode="None"
+                                    StretchContentForSingleRow="False"
+                                    ScrollViewer.HorizontalScrollMode="Disabled"
+                                    ScrollViewer.VerticalScrollMode="Disabled"
+                                    ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                <controls:AdaptiveGridView.Resources>
+                    <Style TargetType="Grid" >
+                       <Setter Property="CornerRadius" Value="4"/>
+                    </Style>
+                    <Style TargetType="Grid" x:Name="DashboardSummaryPanelStyle">
+                        <Setter Property="Background" Value="{ThemeResource AppMainBackgroundBrush}"/>
+                        <Setter Property="BorderBrush" Value="LightGray"/>
+                        <Setter Property="BorderThickness" Value="1"/>
+                        <Setter Property="CornerRadius" Value="4"/>
+                        <Setter Property="Margin" Value="10,0,0,0"/>
+                        <Setter Property="Padding" Value="10"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="DashboardSummaryTitleTextBlockStyle">
+                        <Setter Property="FontSize" Value="24"/>
+                    </Style>
+                    <Style TargetType="TextBlock" x:Key="DashboardSummaryValueTextBlockStyle">
+                        <Setter Property="VerticalAlignment" Value="Bottom"/>
+                        <Setter Property="FontSize" Value="18"/>
+                        <Setter Property="TextTrimming" Value="CharacterEllipsis"/>
+                    </Style>
+                   
+                </controls:AdaptiveGridView.Resources>
+
+
+                <Grid Margin="-10,0,0,0">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid x:Name="DashboardSummaryPanel1"
+                          Style="{StaticResource DashboardSummaryPanelStyle}"
+                          Tag="OpenTasks"
+                          Tapped="DashboardSummaryPanel_Tapped">
+
+                        <TextBlock x:Name="DashboardSummaryOpenTasksCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                        <TextBlock Text="Open Tasks"
+                                   Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                    </Grid>
+
+                    <Grid x:Name="DashboardSummaryPanel2"
+                          Grid.Column="1" 
+                          Style="{StaticResource DashboardSummaryPanelStyle}"
+                          Tag="ClosedTasks"
+                          Tapped="DashboardSummaryPanel_Tapped">
+                        <TextBlock x:Name="DashboardSummaryClosedTasksCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                            <TextBlock Text="Closed Tasks"
+                                       Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                   </Grid>
+
+                    <Grid x:Name="DashboardSummaryPanel3"
+                        Grid.Column="2"
+                          Style="{StaticResource DashboardSummaryPanelStyle}"
+                          Tag="ActiveMilestones"
+                          Tapped="DashboardSummaryPanel_Tapped">
+                        <TextBlock x:Name="DashboardSummaryActiveMilestonesCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                        <TextBlock Text="Active Milestones"
+                                   Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                    </Grid>
+                </Grid>
+
+                <Grid Margin="-10,0,0,0"> 
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <Grid x:Name="DashboardSummaryPanel4"
+                        Style="{StaticResource DashboardSummaryPanelStyle}"
+                          Tag="CompletedMilestones"
+                          Tapped="DashboardSummaryPanel_Tapped">
+                        <TextBlock x:Name="DashboardSummaryCompletedMilestonesCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                            <TextBlock Text="Completed Milestones"
+                                       Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                    </Grid>
+                    <Grid  x:Name="DashboardSummaryPanel5"
+                        Grid.Column="1" 
+                           Style="{StaticResource DashboardSummaryPanelStyle}"
+                           Tag="ActiveProjects"
+                          Tapped="DashboardSummaryPanel_Tapped">
+                        <TextBlock x:Name="DashboardSummaryActiveProjectsCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                            <TextBlock Text="Active Projects"
+                                       Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                        </Grid>
+                    <Grid  x:Name="DashboardSummaryPanel6"
+                        Grid.Column="2" 
+                           Style="{StaticResource DashboardSummaryPanelStyle}"
+                           Tag="CompletedProjects"
+                          Tapped="DashboardSummaryPanel_Tapped">
+                        <TextBlock x:Name="DashboardSummaryClosedProjectsCountTextBlock"
+                                   Style="{StaticResource DashboardSummaryTitleTextBlockStyle}"/>
+                            <TextBlock Text="Completed Projects"
+                                       Style="{StaticResource DashboardSummaryValueTextBlockStyle}"/>
+                        </Grid>
+
+                </Grid>
+
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemExpanded}">
+                        <Setter Property="CornerRadius" Value="4"/>
+                        <Setter Property="Margin" Value="10,10,0,0"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal" MaximumRowsOrColumns="4"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </controls:AdaptiveGridView>
+        </Grid>
+
+        <Grid Grid.Row="2"
+              Background="{ThemeResource AppMainBackgroundBrush}"
+              CornerRadius="4"
+              Margin="0,3,0,0">
+
+            <controls:AdaptiveGridView  x:Name="WidgetAdaptiveGridView"
+                                            AllowDrop="True"
+                                            CanReorderItems="False"
+                                            CanDragItems="False"
+                                            DesiredWidth="600"
+                                            Grid.Row="2"
+                                            ItemHeight="400"
+                                            HorizontalAlignment="Stretch"
+                                            IsItemClickEnabled="False"
+                                            Margin="0,0,10,0"
+                                            OneRowModeEnabled="False"
+                                            SelectionMode="None"
+                                            StretchContentForSingleRow="False"
+                                            ScrollViewer.VerticalScrollBarVisibility="Hidden">
+             
+
+                <GridView.ItemContainerStyle>
+                    <Style TargetType="GridViewItem" >
+                        <Setter Property="VerticalContentAlignment" Value="Center"/>
+                        <Setter Property="Margin" Value="10,10,0,0"/>
+                    </Style>
+                </GridView.ItemContainerStyle>
+                <GridView.ItemsPanel>
+                    <ItemsPanelTemplate>
+                        <ItemsWrapGrid Orientation="Horizontal"/>
+                    </ItemsPanelTemplate>
+                </GridView.ItemsPanel>
+            </controls:AdaptiveGridView>
+            <muxc:ProgressRing x:Name="DataLoadingProgressRing"
+                                   IsActive="True"
+                                   Margin="0,-50,0,0"
+                                   Height="60"
+                                   Width="60"/>
+        </Grid>
+
+    </Grid>
+</Page>

@@ -1,0 +1,193 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.AppPage.SignInPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Page.Resources>
+       
+        
+        <Style TargetType="TextBlock" x:Name="AlertTextBlockStyle">
+            <Setter Property="HorizontalAlignment" Value="Right"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Visibility" Value="Collapsed"/>
+        </Style>
+        
+        <Style TargetType="TextBlock" x:Name="ValidCheckSymbolTextBlockStyle">
+            <Setter Property="FontSize" Value="8"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="FontFamily" Value="Segoe MDL2 Assets"/>
+            <Setter Property="HorizontalAlignment" Value="Center"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+            <Setter Property="Margin" Value="0,0,0,0"/>
+         </Style>
+    </Page.Resources>
+
+    <Grid x:Name="SignInPagePanel" 
+          Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}" 
+          CornerRadius="10" 
+          Margin="10"
+          MaxWidth="1000" 
+          MaxHeight="800" 
+          Loaded="SignInPagePanel_Loaded">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800" />
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="ImageColumn.Width" Value="*"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+            
+        </VisualStateManager.VisualStateGroups>
+        <Grid Opacity="0.3">
+            <Image Source="/Assets/Square44x44Logo.scale-400.png" 
+                   HorizontalAlignment="Center" 
+                   Opacity="0.1"
+                   VerticalAlignment="Center" />
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SignInColumn" Width="*"/>
+                <ColumnDefinition x:Name="ImageColumn" Width="0"/>
+            </Grid.ColumnDefinitions>
+            <Grid Padding="30,0,15,0">
+                
+                <TextBlock Text="Sign In." 
+                           FontWeight="SemiBold" 
+                           FontSize="45" 
+                           Margin="0,40,0,0"/>
+                
+                <StackPanel  VerticalAlignment="Center">
+                    <TextBlock Text="Connect with account." 
+                               FontSize="35"  
+                               Margin="0,15,0,0"/>
+                    <StackPanel Margin="0,20,0,0">
+                        <Grid>
+                            <TextBlock Text="Email" 
+                                       FontSize="16" />
+                            <ProgressRing x:Name="EmailProgressRing"
+                                          IsActive="False"
+                                          HorizontalAlignment="Left"
+                                          Margin="50,0,0,0"/>
+                            <Grid Width="16"
+                                  Height="16"
+                                  CornerRadius="10"
+                                  HorizontalAlignment="Left"
+                                  Margin="45,3,0,0">
+                                <Grid x:Name="EmailNotFoundSymbolGrid"
+                                    Background="Red"
+                                      Visibility="Collapsed">
+                                    <TextBlock Text="&#xF78A;"
+                                               Style="{StaticResource ValidCheckSymbolTextBlockStyle}"/>
+                                </Grid>
+                                <Grid x:Name="EmailFoundSymbolGrid"
+                                    Background="Green" 
+                                      Visibility="Collapsed">
+                                    <TextBlock  Text="&#xF78C;"
+                                                Style="{StaticResource ValidCheckSymbolTextBlockStyle}"/>
+                                </Grid>
+                            </Grid>
+                            <TextBlock x:Name="EmailAlertTextBlock" 
+                                   Text="*Please Enter Valid Email"  
+                                   Style="{StaticResource AlertTextBlockStyle}"
+                                  />
+                        </Grid>
+
+                        <TextBox x:Name="EmailTextBox" 
+                                 CornerRadius="5"  
+                                 Height="40" 
+                                 HorizontalAlignment="Stretch" 
+                                 IsSpellCheckEnabled="False"
+                                 PlaceholderText="Enter your email."
+                                 LostFocus="EmailTextBox_LostFocus"
+                                 Margin="0,5,0,0"
+                                 Padding="5,10,0,0">
+                        </TextBox>
+                    </StackPanel>
+
+                    <StackPanel Margin="0,20,0,0">
+                        <Grid>
+                            <TextBlock Text="Password" 
+                                           FontSize="16" 
+                                           HorizontalAlignment="Stretch" />
+                            <ProgressRing x:Name="PasswwordProgressRing"
+                                          IsActive="False"
+                                         HorizontalAlignment="Left"
+                                          Margin="75,0,0,0"/>
+                            <Grid Width="16"
+                                  Height="16"
+                                  CornerRadius="10"
+                                  HorizontalAlignment="Left"
+                                  Margin="75,3,0,0">
+                                <Grid x:Name="PasswordNotFoundSymbolGrid"
+                                    Background="Red"
+                                      Visibility="Collapsed">
+                                    <TextBlock Text="&#xF78A;"
+                                               Style="{StaticResource ValidCheckSymbolTextBlockStyle}"/>
+                                </Grid>
+                            </Grid>
+
+                      
+                        </Grid>
+                        <PasswordBox x:Name="PasswordPasswordBox" 
+                                     Height="40" 
+                                     IsPasswordRevealButtonEnabled="True"
+                                     BorderThickness="1" 
+                                     CornerRadius="5" 
+                                     HorizontalAlignment="Stretch" 
+                                     Padding="5,10,0,0"
+                                     Margin="0,5,0,0"
+                                     PlaceholderText="Enter your password"/>
+
+                    </StackPanel>
+
+                    <Button x:Name="SignInButton" 
+                            Content="Sign In" 
+                            Margin="0,35,0,0" 
+                            HorizontalAlignment="Stretch" 
+                            Height="40" 
+                            Click="SignInButton_Click"
+                            Style="{StaticResource AccentButtonStyle}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                        <TextBlock Text="If you dont have an account," Margin="0,5,5,0"/>
+                        <HyperlinkButton Name="SignUpPageNavigateHyperlinkButton" 
+                                         Content="Click Here." 
+                                         Click="SignUpPageNavigateHyperlinkButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1" >
+                <StackPanel Margin="20,50,0,0" >
+                    <TextBlock Text="Welcome Back !" 
+                               TextWrapping="WrapWholeWords" 
+                               FontSize="35" 
+                               Foreground="SteelBlue"/>
+                   <TextBlock Text="A Central hub where teams can work, plan and acheive amazing together."  
+                              Margin="0,10,0,0" 
+                              FontSize="18"
+                              FontWeight="SemiBold" 
+                              TextWrapping="WrapWholeWords" 
+                              Foreground="SteelBlue"/>
+
+                </StackPanel>
+                <Image Source="/Assets/SignInImage.png" 
+                       Margin="0,0,0,0" 
+                       Width="500"
+                       Height="400"
+                       Stretch="Fill"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,244 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.ProjectUserControl.ProjectPlainViewItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.ProjectUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:helper="using:Projects.Core.Helper" xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl" xmlns:entity="using:Projects.Core.Entity"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="ContentTextBlockStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid  x:Name="ProjectPlainViewItemControlPanel"
+        Background="Transparent"
+            CornerRadius="4" 
+            Height="45"
+            Margin="0,1" 
+            Padding="10,5,10,3"
+           Loaded="ProjectPlainViewItemControlPanel_Loaded"
+           Unloaded="ProjectPlainViewItemControlPanel_Unloaded">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="CheckBoxColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="TicketColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="PercentageColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="BriefViewColumnWidth" Width="auto" />
+
+            <ColumnDefinition x:Name="NameColumnWidth" Width="*" />
+
+            <ColumnDefinition x:Name="StatusColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="StartDateColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="DueDateColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="OwnerColumnWidth" Width="auto"/>
+        </Grid.ColumnDefinitions>
+
+        <CheckBox x:Name="ItemSelectCheckBox"
+                  Checked="ItemSelectCheckBox_Checked"
+                  Grid.Column="0" 
+                  MinWidth="30"
+                  Unchecked="ItemSelectCheckBox_Unchecked"/>
+
+        <TextBlock x:Name="TicketNumberBlock"  
+                   Text="{x:Bind _Project.ID,Mode=OneWay}" 
+                   Grid.Column="1" 
+                    Margin="5,0"
+                    HorizontalAlignment="Center"  
+                    VerticalAlignment="Center" />
+        
+        <TextBlock Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_Project.CompletedPercentage),Mode=OneWay}" 
+                    Grid.Column="2"
+                    HorizontalAlignment="Center"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center"
+                    Visibility="Visible"/>
+
+        <Button x:Name="BriefViewButton" 
+                Content="&#xE70D;"
+                Grid.Column="3" 
+                FontSize="10" 
+                FontWeight="Bold" 
+                Margin="10,4,0,0" 
+                Padding="5,6,5,5"
+                VerticalAlignment="Center"
+                Style="{StaticResource SymbolNoBGButtonStyle}" >
+            
+            <Button.Flyout>
+                <Flyout Placement="BottomEdgeAlignedLeft">
+                   
+                 <StackPanel Background="White" Width="300" Padding="15">
+                            <TextBlock FontSize="18" 
+                                                            FontWeight="Medium"
+                                                            MaxLines="4"
+                                                            Text="{x:Bind _Project.Name,Mode=OneWay}"
+                                                            TextWrapping="Wrap"
+                                                            TextTrimming="CharacterEllipsis"/>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock FontWeight="SemiLight" 
+                                                                   Text="Status"/>
+                                <TextBlock Margin="0,2,0,0"
+                                                                   Text="{x:Bind helper:ProjectHelper.ConvertProjectStatusToString(_Project.Status),Mode=OneWay}" 
+                                                                   Style="{StaticResource ContentTextBlockStyle}"/>
+                            </StackPanel>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock FontWeight="SemiLight"   Text="Completed Percentage"/>
+                                <TextBlock  Style="{StaticResource ContentTextBlockStyle}"
+                                                                    Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_Project.CompletedPercentage),Mode=OneWay}"/>
+                            </StackPanel>
+
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock FontWeight="SemiLight"   
+                                                                   Text="Owner"/>
+                                <userusercontrol:UserPersonPictureControl 
+                                                            DataContext="{x:Bind _Project.Owner,Mode=OneWay}"
+                                                            HorizontalAlignment="Left" 
+                                                            Margin="0,10,0,0"/>
+                            </StackPanel>
+                            <Grid Margin="0,10,0,0">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="*"/>
+                                </Grid.ColumnDefinitions>
+                                <StackPanel>
+                                    <TextBlock FontWeight="SemiLight"   Text="Start Date"/>
+                                    <TextBlock  Style="{StaticResource ContentTextBlockStyle}"
+                                                                        Margin="0,2,0,0"
+                                                                        Text="{x:Bind helper:TextChangeHelper.GetShortDateString(_Project.StartDate),Mode=OneWay}"/>
+                                </StackPanel>
+                                <StackPanel Grid.Column="1">
+                                    <TextBlock FontWeight="SemiLight"  Text="End Date"/>
+                                    <TextBlock  Style="{StaticResource ContentTextBlockStyle}"
+                                                                        Margin="0,2,0,0"
+                                                                        Text="{x:Bind helper:TextChangeHelper.GetShortDateString(_Project.EndDate),Mode=OneWay}"/>
+                                </StackPanel>
+                            </Grid>
+                            <StackPanel Margin="0,10,0,0">
+                                <TextBlock FontWeight="SemiLight"   
+                                           Text="Users"/>
+                                <ListView x:Name="UsersListView"
+                                           ItemsSource="{x:Bind _Project.UserCollection,Mode=OneWay}"
+                                            Margin="0,5,0,0"
+                                            SelectionMode="None"
+                                            ScrollViewer.HorizontalScrollMode="Enabled"
+                                            ScrollViewer.HorizontalScrollBarVisibility="Hidden"
+                                            ScrollViewer.VerticalScrollMode="Disabled"
+                                            ScrollViewer.VerticalScrollBarVisibility="Disabled">
+                                    
+                                    <ListView.ItemTemplate>
+                                        <DataTemplate x:DataType="entity:ZUser">
+                                            <userusercontrol:UserPersonPictureControl/>
+                                        </DataTemplate>
+                                    </ListView.ItemTemplate>
+                                    <ListView.ItemContainerStyle>
+                                        <Style TargetType="ListViewItem">
+                                            <Setter Property="Padding" Value="0"/>
+                                            <Setter Property="Margin" Value="0,0,10,0"/>
+                                            <Setter Property="MinWidth" Value="10"/>
+                                        </Style>
+                                    </ListView.ItemContainerStyle>
+                                    <ListView.ItemsPanel>
+                                        <ItemsPanelTemplate >
+                                            <StackPanel Orientation="Horizontal"/>
+                                        </ItemsPanelTemplate>
+                                    </ListView.ItemsPanel>
+                                </ListView>
+                            </StackPanel>
+                        </StackPanel>
+                   
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+
+
+        <TextBlock  x:Name="NameTextBlock"  
+                    Text="{x:Bind _Project.Name,Mode=OneWay}"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Grid.Column="4" 
+                    HorizontalAlignment="Left" 
+                    Margin="5,0,10,0"
+                    TextTrimming="CharacterEllipsis" 
+                    TextAlignment="Left" 
+                    ToolTipService.Placement="Bottom"
+                    ToolTipService.ToolTip="{x:Bind _Project.Name,Mode=OneWay}"
+                    VerticalAlignment="Center" />
+
+
+        <Button x:Name="StatusButton" 
+                Content="{x:Bind helper:ProjectHelper.ConvertProjectStatusToString(_Project.Status),Mode=OneWay}" 
+                Grid.Column="5" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Margin="10,0,0,0"
+                MinWidth="60"  
+                Style="{StaticResource NoBGButtonStyle}"
+                Padding="10,5">
+            
+            <Button.Flyout>
+                <MenuFlyout   Placement="BottomEdgeAlignedRight">
+                    <MenuFlyoutItem Text="Active" Tag="Active" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="In Progress" Tag="InProgress" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="Delayed" Tag="Delayed" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="In Testing" Tag="InTesting" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="On Hold" Tag="OnHold" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="Approved" Tag="Approved" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="Cancelled" Tag="Cancelled" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="Planning" Tag="Planning" Click="StatusMenuFlyoutItem_Click"/>
+                    <MenuFlyoutItem Text="Completed" Tag="Completed" Click="StatusMenuFlyoutItem_Click"/>
+                </MenuFlyout>
+            </Button.Flyout>
+        </Button>
+
+
+        <Button  x:Name="StartDateButton" 
+                 Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_Project.StartDate),Mode=OneWay}" 
+                 Click="StartDateButton_Click"
+                 Margin="0,0,0,0"
+                 Grid.Column="6" 
+                HorizontalAlignment="Center" 
+                 Style="{StaticResource NoBGButtonStyle}"
+                 Padding="0,5"
+                VerticalAlignment="Center"
+                 Width="70">
+        </Button>
+        <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                            DateChanged="StartDateCalendarDatePicker_DateChanged"
+                            Grid.Column="6" 
+                            HorizontalAlignment="Center" 
+                           Width="0">
+        </CalendarDatePicker>
+
+
+        <Button  x:Name="DueDateButton" 
+                Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_Project.EndDate),Mode=OneWay}" 
+                 Click="DueDateButton_Click"
+                 Margin="0,0,0,0"  
+                Grid.Column="7" 
+                HorizontalAlignment="Center" 
+                Style="{StaticResource NoBGButtonStyle}"
+                 Padding="0,5"
+                VerticalAlignment="Center"
+                Width="70">
+        </Button>
+        <CalendarDatePicker x:Name="DueDateCalendarDatePicker"
+                            DateChanged="DueDateCalendarDatePicker_DateChanged"
+                            Grid.Column="7" 
+                            HorizontalAlignment="Center" 
+                            Width="0">
+        </CalendarDatePicker>
+
+        <Grid   Grid.Column="8" 
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+
+            <userusercontrol:UserPersonPictureControl DataContext="{x:Bind _Project.Owner,Mode=OneWay}"/>
+        </Grid>
+
+    </Grid>
+</UserControl>

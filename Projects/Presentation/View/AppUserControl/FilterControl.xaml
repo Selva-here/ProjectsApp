@@ -1,0 +1,469 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.FilterControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+     xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:entityobj="using:Projects.Core.EntityObj" 
+    xmlns:helper="using:Projects.Core.Helper" 
+    xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl" 
+    xmlns:entity="using:Projects.Core.Entity" 
+    xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+       
+    </UserControl.Resources>
+
+    <Grid  x:Name="FilterControlPanel"
+        Background="{ThemeResource AppMainBackgroundBrush}"
+           CornerRadius="4"
+           Margin="0,0,0,0" 
+           Loaded="FilterControlPanel_Loaded"
+           Unloaded="FilterControlPanel_Unloaded"
+           ScrollViewer.VerticalScrollMode="Enabled">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+        <Grid 
+                          Padding="20,8,10,9">
+            <TextBlock Text="Filter"
+                                   FontSize="20"
+                                   FontWeight="Medium"/>
+            <StackPanel HorizontalAlignment="Right" 
+                        Orientation="Horizontal">
+                <Button x:Name="FilterRefreshButton"
+                    Click="FilterRefreshButton_Click"
+                    Content="&#xE72C;"
+                        Margin="0,0,5,0"
+                    Style="{StaticResource SymbolNoBGButtonStyle}"/>
+                <Button x:Name="CloseButton"
+                    Click="CloseButton_Click"
+                    Content="&#xF78A;"
+                    Style="{StaticResource SymbolNoBGButtonStyle}"/>
+            </StackPanel>
+
+        </Grid>
+
+        <ScrollViewer Grid.Row="1"
+                        HorizontalScrollMode="Disabled"
+                                  VerticalScrollMode="Enabled" 
+                                  VerticalScrollBarVisibility="Hidden">
+            <StackPanel>
+                <muxc:Expander x:Name="OwnerFilterExpander"
+                            HorizontalAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40">
+                            <TextBlock Text="Owner" 
+                                       FontSize="16"
+                                       FontWeight="Medium"
+                                       VerticalAlignment="Center"
+                                               />
+                            <Button  x:Name="OwnerFilterCancelButton"
+                                                 Click="OwnerFilterCancelButton_Click"
+                                                 Content="&#xE711;"
+                                                 FontSize="10"
+                                                 Margin="5,0,0,0"
+                                                 Style="{StaticResource SymbolNoBGButtonStyle}"
+                                                 Visibility="Collapsed"
+                                                 VerticalAlignment="Center"/>
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <ComboBox x:Name="OwnerFilterComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          PlaceholderText="Pick a Choice" 
+                                          SelectionChanged="OwnerFilterComboBox_SelectionChanged"
+                                          Width="280">
+                            <ComboBoxItem Content="Is" Tag="Is" />
+                            <ComboBoxItem Content="Is Not" Tag="IsNot"/>
+                        </ComboBox>
+                        <Grid Margin="0,10,0,0" >
+
+                            <Grid   x:Name="SelectedOwnerPanel"
+                                    BorderBrush="LightGray"
+                                    BorderThickness="0"
+                                    CornerRadius="4"
+                                    Height="40"
+                                    Padding="5,0"
+                                    Visibility="Collapsed">
+                                <Grid.ColumnDefinitions>
+                                    <ColumnDefinition Width="auto"/>
+                                    <ColumnDefinition Width="*"/>
+                                    <ColumnDefinition Width="auto"/>
+                                </Grid.ColumnDefinitions>
+                                <userusercontrol:UserPersonPictureControl 
+                                    DataContext="{x:Bind SelectedOwner,Mode=OneWay}"/>
+                                <TextBlock  Grid.Column="1"
+                                            Margin="10,0,0,0"
+                                            Text="{x:Bind SelectedOwner.Name,Mode=OneWay}"
+                                            TextTrimming="CharacterEllipsis"
+                                            VerticalAlignment="Center"/>
+                                <Button x:Name="SelectedOwnerCancelButton"
+                                        Click="SelectedOwnerCancelButton_Click"
+                                        FontSize="10"
+                                        Content="&#xF78A;" 
+                                        Grid.Column="2"
+                                        Style="{StaticResource SymbolNoBGButtonStyle}"/>
+                            </Grid>
+
+                            <AutoSuggestBox x:Name="OwnerFilterAutoSuggestBox"
+                                            Height="40" 
+                                            SuggestionChosen="OwnerFilterAutoSuggestBox_SuggestionChosen"
+                                            TextChanged="OwnerFilterAutoSuggestBox_TextChanged"
+                                            QuerySubmitted="OwnerFilterAutoSuggestBox_QuerySubmitted"
+                                            Visibility="Collapsed">
+                                <AutoSuggestBox.ItemTemplate>
+                                    <DataTemplate x:DataType="entity:ZUser" >
+                                        <userusercontrol:UserAutoSuggestionBoxSuggestionItemTemplateControl />
+                                    </DataTemplate>
+                                </AutoSuggestBox.ItemTemplate>
+                            </AutoSuggestBox>
+                        </Grid>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <muxc:Expander x:Name="PriorityFilterExpander"
+                               HorizontalAlignment="Stretch"
+                               Visibility="{x:Bind GetVisibility(PriorityFilterComboBox.Tag),Mode=OneWay}">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40">
+                            <TextBlock  Text="Priority" 
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        VerticalAlignment="Center"/>
+                            <Button x:Name="PriorityFilterCancelButton"
+                                    Click="PriorityFilterCancelButton_Click"
+                                    Content="&#xE711;"
+                                    FontSize="10"
+                                    Margin="5,0,0,0"
+                                    Style="{StaticResource SymbolNoBGButtonStyle}"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed"/>
+
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <Grid HorizontalAlignment="Stretch">
+                        <ComboBox   x:Name="PriorityFilterComboBox"
+                                    Tag="Task"
+                                    CornerRadius="4"
+                                    Height="40"
+                                    HorizontalAlignment="Stretch"
+                                    PlaceholderText="Pick a Choice" 
+                                    SelectionChanged="PriorityFilterComboBox_SelectionChanged"
+                                    Width="280">
+                            <ComboBoxItem Content="None" />
+                            <ComboBoxItem Content="Low" />
+                            <ComboBoxItem Content="Medium" />
+                            <ComboBoxItem Content="High" />
+                        </ComboBox>
+                    </Grid>
+                </muxc:Expander>
+                
+
+                <muxc:Expander x:Name="StatusFilterExpander"
+                                       HorizontalAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40">
+                            <TextBlock  Text="Status" 
+                                        FontSize="16"
+                                        FontWeight="Medium"
+                                        VerticalAlignment="Center"/>
+                            <Button x:Name="StatusFilterCancelButton"
+                                    Click="StatusFilterCancelButton_Click"
+                                    Content="&#xE711;"
+                                    FontSize="10"
+                                    Margin="5,0,0,0"
+                                    Style="{StaticResource SymbolNoBGButtonStyle}"
+                                    VerticalAlignment="Center"
+                                    Visibility="Collapsed"/>
+                            
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <Grid HorizontalAlignment="Stretch">
+                        <ComboBox   x:Name="StatusFilterProjectComboBox"
+                                    Tag="Project"
+                                    CornerRadius="4"
+                                    Height="40"
+                                    HorizontalAlignment="Stretch"
+                                    PlaceholderText="Pick a Choice" 
+                                    SelectionChanged="StatusFilterComboBox_SelectionChanged"
+                                    Visibility="{x:Bind GetVisibility(StatusFilterProjectComboBox.Tag),Mode=OneWay}"
+                                    Width="280">
+                            <ComboBoxItem Content="Active" />
+                            <ComboBoxItem Content="In Progress" />
+                            <ComboBoxItem Content="On Track" />
+                            <ComboBoxItem Content="Delayed" />
+                            <ComboBoxItem Content="In Testing"/>
+
+                            <ComboBoxItem Content="On Hold" />
+                            <ComboBoxItem Content="Approved" />
+                            <ComboBoxItem Content="Cancelled" />
+                            <ComboBoxItem Content="Planning" />
+                            <ComboBoxItem Content="Completed" />
+                        </ComboBox>
+
+                        <ComboBox x:Name="StatusFilterMilestoneComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          PlaceholderText="Pick a Choice" 
+                                          SelectionChanged="StatusFilterComboBox_SelectionChanged"
+                                  Tag="Milestone"
+                                   Visibility="{x:Bind GetVisibility(StatusFilterMilestoneComboBox.Tag),Mode=OneWay}"
+                                          Width="280">
+                            <ComboBoxItem Content="Active" />
+                            <ComboBoxItem Content="In Progress" />
+                            <ComboBoxItem Content="Reopen" />
+                            <ComboBoxItem Content="Archeived"/>
+                            <ComboBoxItem Content="On Hold"/>
+                            <ComboBoxItem Content="Deferred" />
+                            <ComboBoxItem Content="Cancelled" />
+                            <ComboBoxItem Content="Completed" />
+                        </ComboBox>
+
+                        <ComboBox x:Name="StatusFilterTaskComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          PlaceholderText="Pick a Choice" 
+                                          SelectionChanged="StatusFilterComboBox_SelectionChanged"
+                                  Tag="Task"
+                                   Visibility="{x:Bind GetVisibility(StatusFilterTaskComboBox.Tag),Mode=OneWay}"
+                                          Width="280">
+                            <ComboBoxItem Content="Open" />
+                            <ComboBoxItem Content="In Progress" />
+                            <ComboBoxItem Content="In Review" />
+                            <ComboBoxItem Content="To Be Tested"/>
+                            <ComboBoxItem Content="On Hold"/>
+                            <ComboBoxItem Content="Deferred" />
+                            <ComboBoxItem Content="Cancelled" />
+                            <ComboBoxItem Content="Closed" />
+                        </ComboBox>
+                    </Grid>
+                </muxc:Expander>
+
+                <muxc:Expander x:Name="PercentageFilterExpander"
+                                       HorizontalAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40">
+                            <TextBlock Text="Percentage" 
+                                               FontSize="16"
+                                               FontWeight="Medium"
+                                               VerticalAlignment="Center"/>
+                            <Button  x:Name="PercentageFilterCancelButton"
+                                                 Click="PercenatgeFilterCancelButton_Click"
+                                                 Content="&#xE711;"
+                                                 FontSize="10"
+                                                 Margin="5,4,0,0"
+                                                 Style="{StaticResource SymbolNoBGButtonStyle}"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="Collapsed"/>
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <ComboBox x:Name="PercentageFilterComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          PlaceholderText="Pick a Choice" 
+                                          SelectionChanged="PercentageFilterComboBox_SelectionChanged"
+                                          Width="280">
+                            <ComboBoxItem Content="Less Than" />
+                            <ComboBoxItem Content="Greater Than" />
+                            <ComboBoxItem Content="Equal" />
+                            <!--<ComboBoxItem Content="Between" />-->
+                        </ComboBox>
+                        <muxc:NumberBox x:Name="PercentageFilterNumberBox"
+                                            Height="40"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="0,10,0,0"
+                                            Minimum="0"
+                                            Maximum="100"
+                                            LargeChange="10"
+                                            SpinButtonPlacementMode="Inline"
+                                            SmallChange="1"
+                                            Value="0"
+                                            Visibility="Collapsed"
+                                            Width="280"/>
+                        <muxc:NumberBox x:Name="PercentageFilterSecondNumberBox"
+                                            Height="40"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="0,10,0,0"
+                                            Minimum="0"
+                                            Maximum="100"
+                                            LargeChange="10"
+                                            SpinButtonPlacementMode="Inline"
+                                            SmallChange="1"
+                                            Value="0"
+                                            Visibility="Collapsed"
+                                            Width="280"/>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <muxc:Expander x:Name="StartDateFilterExpander"
+                                       HorizontalAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40">
+                            <TextBlock Text="Start Date" 
+                                               FontSize="16"
+                                               FontWeight="Medium"
+                                                   VerticalAlignment="Center"/>
+                            <Button  x:Name="StartDateFilterCancelButton"
+                                                 Click="StartDateFilterCancelButton_Click"
+                                                 Content="&#xE711;"
+                                                 FontSize="10"
+                                                 Margin="5,4,0,0"
+                                                 Style="{StaticResource SymbolNoBGButtonStyle}"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="Collapsed"/>
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <ComboBox x:Name="StartDateFilterComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                              SelectionChanged="StartDateFilterComboBox_SelectionChanged"
+                                          PlaceholderText="Pick a Choice" 
+                                              VerticalAlignment="Center"
+                                          Width="280">
+                            <ComboBoxItem Content="Today" Tag="No"/>
+                            <ComboBoxItem Content="Till Yesterday" Tag="No"/>
+                            <!--<ComboBoxItem Content="Unscheduled" Tag="No"/>--> 
+                            <ComboBoxItem Content="Tomorrow" Tag="No"/>
+                            <ComboBoxItem Content="Yesterday" Tag="No"/>
+
+                            <ComboBoxItem Content="Greater Than" Tag="One"/>
+                            <ComboBoxItem Content="Less Than" Tag="One"/>
+                            <ComboBoxItem Content="Greater Than Or Equal" Tag="One"/>
+                            <ComboBoxItem Content="Less Than Or Equal" Tag="One"/>
+                            <!--<ComboBoxItem Content="Between" Tag="Two"/>-->
+                        </ComboBox>
+                        <CalendarDatePicker x:Name="StartDateFilterCalendarDatePicker"
+                                                    CornerRadius="4"
+                                                    Height="40"
+                                                    HorizontalAlignment="Stretch"
+                                                    Margin="0,15,0,0"
+                                                    Visibility="Collapsed"/>
+                        <CalendarDatePicker x:Name="StartDateFilterSecondCalendarDatePicker" 
+                                                    CornerRadius="4"
+                                                    Height="40"
+                                                    HorizontalAlignment="Stretch"
+                                                    Margin="0,10,0,0"
+                                                    Visibility="Collapsed"/>
+                    </StackPanel>
+                </muxc:Expander>
+
+                <muxc:Expander x:Name="EndDateExpander" 
+                                       HorizontalAlignment="Stretch">
+                    <muxc:Expander.Header>
+                        <StackPanel Orientation="Horizontal" Height="40" >
+                            <TextBlock Text="End Date" 
+                                               FontSize="16"
+                                               FontWeight="Medium"
+                                                   VerticalAlignment="Center"/>
+                            <Button  x:Name="EndDateFilterCancelButton"
+                                                 Click="EndDateFilterCancelButton_Click"
+                                                 Content="&#xE711;"
+                                                 FontSize="10"
+                                                Margin="5,4,0,0"
+                                                 Style="{StaticResource SymbolNoBGButtonStyle}"
+                                                 VerticalAlignment="Center"
+                                                 Visibility="Collapsed"/>
+                        </StackPanel>
+                    </muxc:Expander.Header>
+                    <StackPanel HorizontalAlignment="Stretch">
+                        <ComboBox x:Name="EndDateFilterComboBox"
+                                          CornerRadius="4"
+                                          Height="40"
+                                          HorizontalAlignment="Stretch"
+                                          Margin="0,0,0,0"
+                                          PlaceholderText="Pick a Choice" 
+                                          SelectionChanged="EndDateFilterComboBox_SelectionChanged"
+                                          Width="280">
+                            <ComboBoxItem Content="Today" Tag="No"/>
+                            <ComboBoxItem Content="Till Yesterday" Tag="No"/>
+                            <!--<ComboBoxItem Content="Unscheduled" Tag="No"/>-->
+                            <ComboBoxItem Content="Tomorrow" Tag="No"/>
+                            <ComboBoxItem Content="Yesterday" Tag="No"/>
+
+                            <ComboBoxItem Content="Greater Than" Tag="One"/>
+                            <ComboBoxItem Content="Less Than" Tag="One"/>
+                            <ComboBoxItem Content="Greater Than Or Equal" Tag="One"/>
+                            <ComboBoxItem Content="Less Than Or Equal" Tag="One"/>
+                            <!--<ComboBoxItem Content="Between" Tag="Two"/>-->
+                        </ComboBox>
+                        <CalendarDatePicker x:Name="EndDateFilterCalendarDatePicker"
+                                                    CornerRadius="4"
+                                                    Height="40"
+                                                    HorizontalAlignment="Stretch"
+                                                    Margin="0,15,0,0"
+                                                    Visibility="Collapsed"/>
+
+                        <CalendarDatePicker x:Name="EndDateFilterSecondCalendarDatePicker"
+                                                    CornerRadius="4"
+                                                    Height="40"
+                                                    HorizontalAlignment="Stretch"
+                                                    Margin="0,10,0,0"
+                                                    Visibility="Collapsed"/>
+                    </StackPanel>
+                </muxc:Expander>
+            </StackPanel>
+        </ScrollViewer>
+
+        <Grid Grid.Row="2" Margin="0,0,0,10"
+                           Padding="20,0,15,0">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="50"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <RadioButton    Content="Any Of These" 
+                                Checked="FilterMethodRadioButton_Checked"
+                                IsChecked="True"
+                                Tag="Any"
+                                            />
+            <RadioButton    Content="All Of These" 
+                                Checked="FilterMethodRadioButton_Checked"
+                                Tag="All"
+                                Grid.Column="1"/>
+
+
+            <Button x:Name="FilterButton"
+                        Grid.Column="0"
+                        Grid.Row="1"
+                        Click="FilterButton_Click"
+                        Content="Filter"
+                        Height="40"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Stretch"
+                        Style="{StaticResource AccentButtonStyle}"
+                        />
+
+            <Button x:Name="CancelButton"
+                        Grid.Column="1"
+                        Grid.Row="1"
+                        Click="CancelButton_Click"
+                        Content="Cancel"
+                        Height="40"
+                        Margin="0,0,0,0"
+                        HorizontalAlignment="Stretch"
+                        Style="{StaticResource Windows11ButtonStyle}"/>
+
+        </Grid>
+    </Grid>
+</UserControl>

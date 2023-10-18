@@ -1,0 +1,238 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.MilestoneUserControl.MilestonePlainViewItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.MilestoneUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl" xmlns:helper="using:Projects.Core.Helper"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Key="ContentTextBlockStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+        <SwipeItems x:Key="LeftSwipeItemsDelete" Mode="Execute">
+            <SwipeItem Text="Delete" 
+                       Foreground="White"
+                       IconSource="{StaticResource DeleteIcon}" 
+                       Invoked="DeleteSwipeItem_Invoked"
+                       Background="Red"/>
+        </SwipeItems>
+    </UserControl.Resources>
+    <SwipeControl Background="{ThemeResource AppMainBackgroundBrush}" 
+                  CornerRadius="4" 
+                  LeftItems="{StaticResource LeftSwipeItemsDelete}">
+        <Grid   x:Name="MilestonePlainViewItemControlPanel"
+            Background="Transparent"
+            CornerRadius="4" 
+            Height="45"
+            Margin="0,1" 
+            Padding="10,5,10,3"
+            SizeChanged="MilestonePlainViewItemControlPanel_SizeChanged"
+            Loaded="MilestonePlainViewItemControlPanel_Loaded"
+            Unloaded="MilestonePlainViewItemControlPanel_Unloaded">
+
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="CheckBoxColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="TicketColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="PercentageColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="BriefViewColumnWidth" Width="auto" />
+
+                <ColumnDefinition x:Name="NameColumnWidth" Width="*" />
+
+                <ColumnDefinition x:Name="StatusColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="ProjectColumnWidth"  Width="150" />
+
+                <ColumnDefinition x:Name="StartDateColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="DueDateColumnWidth" Width="auto" />
+                <ColumnDefinition x:Name="OwnerColumnWidth" Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+            <CheckBox   x:Name="ItemSelectCheckBox"
+                        IsChecked="{x:Bind _Milestone.IsChecked,Mode=TwoWay}"
+                        Grid.Column="0" 
+                        MinWidth="30"
+                        Checked="ItemSelectCheckBox_Checked"
+                        Unchecked="ItemSelectCheckBox_Unchecked"/>
+
+            <TextBlock  x:Name="TicketNumberBlock"  
+                    Text="{x:Bind _Milestone.ID,Mode=OneWay}" 
+                    Grid.Column="1" 
+                    Margin="5,0"
+                    HorizontalAlignment="Center"  
+                    VerticalAlignment="Center"/>
+
+
+            <TextBlock Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_Milestone.CompletedPercentage),Mode=OneWay}" 
+                                                    Grid.Column="2"  
+                                                    HorizontalAlignment="Center"
+                                                    Margin="10,0,0,0"
+                                                    VerticalAlignment="Center" />
+
+
+            <Button Content="&#xE70D;"
+                Grid.Column="3" 
+                FontSize="10" 
+                FontWeight="Bold" 
+                Margin="10,4,0,0" 
+                Padding="5,6,5,5"
+                VerticalAlignment="Center"
+                Style="{StaticResource SymbolNoBGButtonStyle}" >
+
+                <Button.Flyout>
+                    <Flyout Placement="BottomEdgeAlignedLeft" >
+                        <Flyout.Content>
+                            <StackPanel Background="White" Width="300" Padding="15,15,10,10">
+                                <TextBlock FontSize="20" 
+                                                            FontWeight="Medium"
+                                                            MaxLines="2"
+                                                            Text="{x:Bind _Milestone.Name,Mode=OneWay}"
+                                                            TextWrapping="Wrap"
+                                                            TextTrimming="CharacterEllipsis"     />
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock FontWeight="SemiLight" 
+                                                                   Text="Status"/>
+                                    <TextBlock Margin="0,2,0,0"
+                                            Style="{StaticResource ContentTextBlockStyle}"
+                                                                   Text="{x:Bind helper:MilestoneHelper.ConvertMilestoneStatusToString(_Milestone.Status),Mode=OneWay}" />
+                                </StackPanel>
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock FontWeight="SemiLight"   
+                                           Text="Completed Percentage"/>
+                                    <TextBlock   Style="{StaticResource ContentTextBlockStyle}"
+                                                                    Margin="0,3,0,0"
+                                                                    Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_Milestone.CompletedPercentage),Mode=OneWay}"/>
+                                </StackPanel>
+
+                                <StackPanel Margin="0,10,0,0">
+                                    <TextBlock FontWeight="SemiLight"   
+                                                                   Text="Owner"/>
+                                    <userusercontrol:UserPersonPictureControl DataContext="{x:Bind _Milestone.Owner,Mode=OneWay}"
+                                                                                              HorizontalAlignment="Left"
+                                                                                              Margin="0,5,0,0"/>
+                                </StackPanel>
+                                <Grid Margin="0,10,0,0">
+                                    <Grid.ColumnDefinitions>
+                                        <ColumnDefinition Width="*"/>
+                                        <ColumnDefinition Width="*"/>
+                                    </Grid.ColumnDefinitions>
+                                    <StackPanel>
+                                        <TextBlock FontWeight="SemiLight"   
+                                                                   Text="Start Date"/>
+                                        <TextBlock   Style="{StaticResource ContentTextBlockStyle}"
+                                                                    Margin="0,2,0,0"
+                                                                    Text="{x:Bind helper:TextChangeHelper.GetShortDateString(_Milestone.StartDate),Mode=OneWay}"/>
+                                    </StackPanel>
+                                    <StackPanel Grid.Column="1">
+                                        <TextBlock FontWeight="SemiLight"  Text="End Date"/>
+                                        <TextBlock   Style="{StaticResource ContentTextBlockStyle}"
+                                                                        Margin="0,2,0,0"
+                                                                        Text="{x:Bind helper:TextChangeHelper.GetShortDateString(_Milestone.EndDate),Mode=OneWay}"/>
+                                    </StackPanel>
+                                </Grid>
+                            </StackPanel>
+                        </Flyout.Content>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+
+
+            <TextBlock  x:Name="NameTextBlock"  
+                    Text="{x:Bind _Milestone.Name,Mode=OneWay}"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Grid.Column="4" 
+                    HorizontalAlignment="Left" 
+                    Margin="5,0,10,0"
+                    TextTrimming="CharacterEllipsis" 
+                    TextAlignment="Left" 
+                    ToolTipService.Placement="Bottom"
+                    ToolTipService.ToolTip="{x:Bind _Milestone.Name,Mode=OneWay}"
+                    VerticalAlignment="Center" />
+
+
+            <Button x:Name="StatusButton" 
+                Content="{x:Bind helper:MilestoneHelper.ConvertMilestoneStatusToString(_Milestone.Status),Mode=OneWay}" 
+                Grid.Column="5" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Margin="10,0,0,0"
+                MinWidth="60" 
+                Style="{StaticResource NoBGButtonStyle}"
+                Padding="10,5">
+                <Button.Flyout>
+                    <MenuFlyout x:Name="StatusFlyout" Placement="BottomEdgeAlignedRight">
+                        <MenuFlyoutItem Text="Active"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="In Progress" Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Reopen" Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Archeived"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="On Hold"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Deferred"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Completed"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Cancelled" Click="StatusMenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBlock  x:Name="ProjectTextBlock" 
+                    Text="{x:Bind _Milestone.Name,Mode=OneWay}" 
+                    Grid.Column="6" 
+                    Margin="5,0,10,0"
+                    HorizontalAlignment="Center" 
+                    TextTrimming="CharacterEllipsis"  
+                    TextAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Tapped="ProjectTextBlock_Tapped"
+                    Visibility="{x:Bind ProjectNameVisibilty,Mode=OneWay}"/>
+
+
+
+            <Button  x:Name="StartDateButton" 
+                 Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_Milestone.StartDate),Mode=OneWay}" 
+                 Click="StartDateButton_Click"
+                Margin="0,0,0,0"
+                 Grid.Column="7" 
+                HorizontalAlignment="Center"  
+                 Style="{StaticResource NoBGButtonStyle}"
+                 Padding="0,5"
+                VerticalAlignment="Center"
+                 Width="70">
+            </Button>
+            <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                            DateChanged="StartDateCalendarDatePicker_DateChanged"
+                            Grid.Column="7" 
+                            HorizontalAlignment="Center" 
+                           Width="0">
+            </CalendarDatePicker>
+
+
+            <Button  x:Name="DueDateButton" 
+                 Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_Milestone.EndDate),Mode=OneWay}" 
+                 Click="DueDateButton_Click"
+                 Margin="0,0,0,0"  
+                 Grid.Column="8" 
+                 HorizontalAlignment="Center" 
+                 Style="{StaticResource NoBGButtonStyle}"
+                 Padding="0,5"
+                VerticalAlignment="Center"
+                Width="70">
+            </Button>
+            <CalendarDatePicker x:Name="DueDateCalendarDatePicker"
+                            DateChanged="DueDateCalendarDatePicker_DateChanged"
+                            Grid.Column="8" 
+                            HorizontalAlignment="Center" 
+                            Width="0">
+            </CalendarDatePicker>
+
+            <Grid   Grid.Column="9" Margin="10,0,0,0"
+                    HorizontalAlignment="Center" 
+                    VerticalAlignment="Center">
+
+                <userusercontrol:UserPersonPictureControl DataContext="{x:Bind  _Milestone.Owner,Mode=OneWay}"/>
+            </Grid>
+
+        </Grid>
+    </SwipeControl>
+</UserControl>

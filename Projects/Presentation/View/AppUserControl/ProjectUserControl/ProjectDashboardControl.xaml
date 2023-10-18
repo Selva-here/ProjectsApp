@@ -1,0 +1,193 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.ProjectUserControl.ProjectDashboardControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.ProjectUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+     xmlns:muxc="using:Microsoft.UI.Xaml.Controls"
+    xmlns:taskusercontrol="using:Projects.Presentation.View.AppUserControl.TaskUserControl" 
+    xmlns:milestoneusercontrol="using:Projects.Presentation.View.AppUserControl.MilestoneUserControl"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:entity="using:Projects.Core.Entity"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="Grid" x:Name="DashBoardGrid">
+            <Setter Property="Margin" Value="10,10,10,0"/>
+            <Setter Property="BorderBrush" Value="LightGray"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="CornerRadius" Value="5"/>
+            <Setter Property="Background" Value="{ThemeResource SystemControlAcrylicElementBrush}"/>
+            <Setter Property="Height" Value="80"/>
+        </Style>
+        <Style TargetType="RelativePanel" x:Name="DashBoardTextPanel">
+            <Setter Property="Padding" Value="10,0,0,0"/>
+        </Style>
+
+       
+        <Style TargetType="Button" BasedOn="{StaticResource SymbolNoBGButtonStyle}">
+            <Setter Property="Margin" Value="0,0,5,0"/>
+        </Style>
+        <Style TargetType="muxc:ProgressRing">
+            <Setter Property="Foreground" Value="White"/>
+            <Setter Property="IsActive" Value="True"/>
+            <Setter Property="IsIndeterminate" Value="False"/>
+            <Setter Property="Height" Value="{x:Bind _ProgressRingSize,Mode=OneWay}"/>
+            <Setter Property="Value" Value="100"/>
+            <Setter Property="Width" Value="{x:Bind _ProgressRingSize,Mode=OneWay}"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid>
+        <controls:AdaptiveGridView  Margin="0,5,0,-20"
+                                    DesiredWidth="400"
+                                    Grid.Row="2"
+                                    HorizontalAlignment="Stretch"
+                                    IsItemClickEnabled="False"
+                                    OneRowModeEnabled="False"
+                                    ScrollViewer.VerticalScrollMode="Disabled"
+                                    ScrollViewer.HorizontalScrollMode="Disabled"
+                                    SelectionMode="None"
+                                    StretchContentForSingleRow="False">
+            <Grid x:Name="DashBoardPanel1" 
+                     
+                      Style="{StaticResource DashBoardGrid}">
+                <Rectangle >
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#afebf3" Offset="0.0" />
+                            <GradientStop Color="#67d5e6" Offset="0.50" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <RelativePanel  Style="{StaticResource DashBoardTextPanel}" >
+                    <StackPanel RelativePanel.AlignLeftWithPanel="True" 
+                                   RelativePanel.AlignVerticalCenterWithPanel="True" 
+                                   RelativePanel.LeftOf="DashBoardPanel1SymbolTextBlock">
+                        <TextBlock Name="DashBoardPanel1CountTextBlock" 
+                                       Text="{x:Bind _OpenTasksCount,Mode=OneWay}" />
+                        <TextBlock Name="DashBoardPanel1NameTextBlock"
+                                       Text="Open Tasks"   
+                                       TextTrimming="CharacterEllipsis" 
+                                       RelativePanel.Below="DashBoardPanel1CountTextBlock" />
+                    </StackPanel>
+                    <Grid  x:Name="DashBoardPanel1SymbolTextBlock" 
+                               Margin="0,0,10,0"  
+                               RelativePanel.AlignRightWithPanel="True" 
+                               RelativePanel.AlignVerticalCenterWithPanel="True">
+                        <muxc:ProgressRing  Opacity="0.5" />
+                        <muxc:ProgressRing  Foreground="OrangeRed"
+                                       Value="{x:Bind _OpenTasksCountPercentage,Mode=OneWay}" />
+                    </Grid>
+                </RelativePanel>
+            </Grid>
+
+            <Grid x:Name="DashBoardPanel2" 
+                     Style="{StaticResource DashBoardGrid}" 
+                     >
+                <Rectangle >
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#afebf3" Offset="0.0" />
+                            <GradientStop Color="#67d5e6" Offset="0.50" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <RelativePanel Style="{StaticResource DashBoardTextPanel}" >
+                    <StackPanel Margin="0,0,2,0"
+                                    RelativePanel.AlignLeftWithPanel="True" 
+                                    RelativePanel.AlignVerticalCenterWithPanel="True" 
+                                    RelativePanel.LeftOf="DashBoardPanel2SymbolTextBlock">
+                        <TextBlock  Name="DashBoardPanel2CountTextBlock"
+                                   Text="{x:Bind _ClosedTasksCount,Mode=OneWay}"/>
+                        <TextBlock Name="DashBoardPanel2NameTextBlock"
+                                      Text="Closed Tasks"   
+                                       TextTrimming="CharacterEllipsis" 
+                                       RelativePanel.Below="DashBoardPanel2CountTextBlock" />
+                    </StackPanel>
+                    <Grid  x:Name="DashBoardPanel2SymbolTextBlock" 
+                               Margin="0,0,10,0"  
+                               RelativePanel.AlignRightWithPanel="True" 
+                               RelativePanel.AlignVerticalCenterWithPanel="True">
+                        <muxc:ProgressRing  Opacity="0.5"  
+                                               />
+                        <muxc:ProgressRing  Foreground="SeaGreen"
+                                               Value="{x:Bind _ClosedTasksCountPercentage,Mode=OneWay}"  />
+                    </Grid>
+                </RelativePanel>
+            </Grid>
+
+            <Grid x:Name="DashBoardPanel5" Style="{StaticResource DashBoardGrid}" >
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#c5e7ff" Offset="0.0" />
+                            <GradientStop Color="#96ceff" Offset="0.50" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <RelativePanel Style="{StaticResource DashBoardTextPanel}"  >
+                    <StackPanel RelativePanel.AlignLeftWithPanel="True" 
+                                   RelativePanel.AlignVerticalCenterWithPanel="True" RelativePanel.LeftOf="DashBoardPanel5SymbolTextBlock">
+                        <TextBlock Text="{x:Bind _OpenMilestonesCount,Mode=OneWay}" Name="DashBoardPanel5CountTextBlock" />
+                        <TextBlock Text="Open Milestones" Name="DashBoardPanel5NameTextBlock" TextTrimming="CharacterEllipsis" />
+                    </StackPanel>
+                    <Grid  x:Name="DashBoardPanel5SymbolTextBlock" Margin="0,0,10,0"  RelativePanel.AlignRightWithPanel="True" RelativePanel.AlignVerticalCenterWithPanel="True">
+                        <muxc:ProgressRing  Opacity="0.5"/>
+                        <muxc:ProgressRing Foreground="OrangeRed" 
+                                               Value="{x:Bind _OpenMilestonesCountPercentage,Mode=OneWay}"/>
+                    </Grid>
+
+                </RelativePanel>
+
+            </Grid>
+
+            <Grid x:Name="DashBoardPanel6" Style="{StaticResource DashBoardGrid}" >
+                <Rectangle>
+                    <Rectangle.Fill>
+                        <LinearGradientBrush StartPoint="1,0" EndPoint="0,1">
+                            <GradientStop Color="#c5e7ff" Offset="0.0" />
+                            <GradientStop Color="#96ceff" Offset="0.50" />
+                        </LinearGradientBrush>
+                    </Rectangle.Fill>
+                </Rectangle>
+                <RelativePanel Style="{StaticResource DashBoardTextPanel}"  >
+                    <StackPanel RelativePanel.AlignLeftWithPanel="True" 
+                                    RelativePanel.AlignVerticalCenterWithPanel="True" 
+                                    RelativePanel.LeftOf="DashBoardPanel6SymbolTextBlock">
+                        <TextBlock Name="DashBoardPanel6CountTextBlock"
+                                       
+                                       Text="{x:Bind _ClosedMilestonesCount,Mode=OneWay}"  />
+                        <TextBlock Name="DashBoardPanel6NameTextBlock"  
+                                       Text="Closed Milestones" 
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+                    <Grid  x:Name="DashBoardPanel6SymbolTextBlock" 
+                               Margin="0,0,10,0"  
+                               RelativePanel.AlignRightWithPanel="True" 
+                               RelativePanel.AlignVerticalCenterWithPanel="True">
+                        <muxc:ProgressRing  Opacity="0.5"/>
+                        <muxc:ProgressRing  Foreground="SeaGreen"
+                                               Value="{x:Bind _ClosedMilestonesCountPercentage,Mode=OneWay}" />
+                    </Grid>
+                </RelativePanel>
+
+            </Grid>
+
+            <GridView.ItemContainerStyle>
+                <Style TargetType="GridViewItem" BasedOn="{StaticResource ModifiedGridViewItemExpandedStyle}">
+                    <Setter Property="VerticalContentAlignment" Value="Center"/>
+                    <Setter Property="Margin" Value="0,10,10,0"/>
+                </Style>
+            </GridView.ItemContainerStyle>
+            <GridView.ItemsPanel>
+                <ItemsPanelTemplate>
+                    <ItemsWrapGrid Orientation="Horizontal"/>
+                </ItemsPanelTemplate>
+            </GridView.ItemsPanel>
+
+        </controls:AdaptiveGridView>
+
+    </Grid>
+</UserControl>

@@ -1,0 +1,73 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.TaskDetailViewTaskListViewItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d" xmlns:helper="using:Projects.Core.Helper" 
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid Loaded="TaskDetailViewTaskListViewItemControlPanel_Loaded"  Padding="0,10,0,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="auto"/>
+            <ColumnDefinition Width="*"/>
+        </Grid.ColumnDefinitions>
+        <PersonPicture  Name="OwnerImage"  
+                        Margin="0,3" 
+                        Height="35" 
+                        ProfilePicture="{x:Bind _ZTask.Owner.ImagePath,Mode=OneWay}"
+                        Grid.RowSpan="2"
+                        Width="35" />
+        <TextBlock  Text="!" 
+                    Foreground="{x:Bind helper:ZTaskHelper.PriorityBrush(_ZTask.Priority),Mode=OneWay}" 
+                    FontSize="15"
+                    FontWeight="SemiBold" 
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Center"
+                    Grid.Row="0"
+                    Grid.Column="1"/>
+       
+        <TextBlock  Text="{x:Bind _ZTask.Name,Mode=OneWay}"
+                    FontSize="16"  
+                    FontWeight="Medium"
+                    TextTrimming="CharacterEllipsis"
+                    Grid.Row="0"
+                    Grid.Column="2"/>
+        
+        <Button Content="&#xE70D;" 
+                FontSize="10" 
+                FontWeight="Bold" 
+                Padding="5"
+                Margin="5,5,0,0"
+                Grid.Row="1"
+                Grid.Column="1"
+                Style="{StaticResource SymbolNoBGButtonStyle}"
+                HorizontalAlignment="Center"
+                VerticalAlignment="Center">
+
+            <Button.Flyout>
+                <Flyout Placement="BottomEdgeAlignedLeft" >
+                    <Flyout.Content>
+                        <local:TaskBriefViewControl/>
+                    </Flyout.Content>
+                </Flyout>
+            </Button.Flyout>
+        </Button>
+        <TextBlock  Text="{x:Bind _ZTask.Status,Mode=OneWay}" 
+                    Height="20" 
+                    Padding="0"
+                    Margin="10,0,0,0"
+                    Grid.Row="1"
+                    Grid.Column="2"
+                    Style="{StaticResource NoHoverBGTextBlockButtonStyle}">
+        </TextBlock>
+        
+    </Grid>
+</UserControl>

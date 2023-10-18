@@ -1,0 +1,54 @@
+﻿<ResourceDictionary
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation" 
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml">
+    <ResourceDictionary.ThemeDictionaries>
+
+
+
+
+        <ResourceDictionary x:Key="Light">
+            <ResourceDictionary.MergedDictionaries>
+                <ColorPaletteResources Accent="#FF0067C0" />
+                <ResourceDictionary>
+                    <Color x:Key="ThemeColor" >White</Color>
+                    <Color x:Key="ComplementaryThemeColor" >Black</Color>
+                    <SolidColorBrush x:Key="ThemeBrush" Color="White"/>
+                    <SolidColorBrush x:Key="ComplementaryThemeBrush" Color="Black"/>
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#EEEEEE"/>
+                    <SolidColorBrush x:Key="AppMainBackgroundBrush" Color="White"/>
+                    <SolidColorBrush x:Key="AppContentBackgroundBrush" Color="#F5F5F5"/>
+
+                    <Color x:Key="SystemAccentColorLight1" >#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorLight2">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorLight3">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark1">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark2">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark3">#FF0067C0</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+        <ResourceDictionary x:Key="Dark">
+            <ResourceDictionary.MergedDictionaries>
+                <ColorPaletteResources Accent="#FF0067C0" />
+                <ResourceDictionary>
+                    <Color x:Key="ThemeColor" >Black</Color>
+                    <Color x:Key="ComplementaryThemeColor" >white</Color>
+                    <SolidColorBrush x:Key="ThemeBrush" Color="Black"/>
+                    <SolidColorBrush x:Key="ComplementaryThemeBrush" Color="White"/>
+                    <SolidColorBrush x:Key="AppBackgroundBrush" Color="#1A1A1A"/>
+                    <SolidColorBrush x:Key="AppMainBackgroundBrush" Color="#232323"/>
+                    <SolidColorBrush x:Key="AppContentBackgroundBrush" Color="#2D2D2D"/>
+
+                    <Color x:Key="SystemAccentColorLight1" >#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorLight2">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorLight3">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark1">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark2">#FF0067C0</Color>
+                    <Color x:Key="SystemAccentColorDark3">#FF0067C0</Color>
+                </ResourceDictionary>
+            </ResourceDictionary.MergedDictionaries>
+        </ResourceDictionary>
+
+    </ResourceDictionary.ThemeDictionaries>
+</ResourceDictionary>

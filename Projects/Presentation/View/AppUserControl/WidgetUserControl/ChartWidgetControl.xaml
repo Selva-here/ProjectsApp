@@ -1,0 +1,78 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.ChartWidgetControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:chartingToolkit="using:WinRTXamlToolkit.Controls.DataVisualization.Charting"
+    xmlns:controls="using:Microsoft.UI.Xaml.Controls"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid x:Name="ChartWidgetControlPanel"
+           Background="{ThemeResource AppMainBackgroundBrush}"
+          BorderBrush="LightGray"
+          BorderThickness="1"
+          CornerRadius="4"
+          Loaded="ChartWidgetControlPanel_Loaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+        <Grid Padding="10,0" 
+              BorderBrush="LightGray"
+              BorderThickness="0,0,0,1"
+              Height="50">
+            <TextBlock Text="{x:Bind WidgetTitle}"
+                       FontSize="18"
+                       VerticalAlignment="Center"/>
+            <controls:DropDownButton x:Name="ViewOptionDropDownButton"
+                                     Content="Pie Chart" 
+                                     HorizontalAlignment="Right"
+                                     VerticalAlignment="Center"
+                                     Height="35"
+                                     Width="140">
+                <controls:DropDownButton.Flyout>
+                    <MenuFlyout Placement="Bottom">
+                        <MenuFlyoutItem Text="Pie Chart" Tag="Pie"  Click="ChartTypeMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Column Chart" Tag="Column" Click="ChartTypeMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Area Chart" Tag="Area"  Click="ChartTypeMenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </controls:DropDownButton.Flyout>
+            </controls:DropDownButton>
+        </Grid>
+        <Grid x:Name="ChartPanel" Grid.Row="1" >
+            <Grid x:Name="ChartContentPanel">
+                <chartingToolkit:Chart x:Name="PieChart" Tag="Pie"
+                                   Visibility="Visible">
+                    <chartingToolkit:PieSeries DependentValuePath="Value" 
+		                                      IndependentValuePath="Key"  
+                                              ItemsSource="{Binding}" />
+                </chartingToolkit:Chart>
+
+                <chartingToolkit:Chart x:Name="ColumnChart" Tag="Column" Visibility="Collapsed">
+                    <chartingToolkit:ColumnSeries DependentValuePath="Value" 
+                                                  IndependentValuePath="Key"  
+                                                  ItemsSource="{Binding}" />
+                </chartingToolkit:Chart >
+
+               
+                <chartingToolkit:Chart x:Name="AreaChart" Tag="Area"
+                                   Visibility="Collapsed">
+                    <chartingToolkit:AreaSeries       DependentValuePath="Value" 
+		                                    IndependentValuePath="Key"  
+                                            ItemsSource="{Binding}" />
+                </chartingToolkit:Chart>
+            </Grid>
+            <TextBlock  x:Name="NoItemsFoundTextBlock"
+                            Foreground="Gray"
+                            FontSize="24"
+                            HorizontalAlignment="Center"
+                            Text="No Items Found."
+                            VerticalAlignment="Center"
+                            Visibility="Collapsed"/>
+        </Grid>
+    </Grid>
+</UserControl>

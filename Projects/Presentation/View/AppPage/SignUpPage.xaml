@@ -1,0 +1,203 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.AppPage.SignUpPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d">
+
+    <Grid x:Name="SignUpPagePanel" 
+          MaxWidth="1000" 
+          MaxHeight="800" 
+          SizeChanged="SignUpPagePanel_SizeChanged" 
+          CornerRadius="10" 
+          Margin="10"
+          Background="{ThemeResource SystemControlAcrylicElementMediumHighBrush}">
+        <Grid Opacity="0.5">
+            <Image Source="Assets/Square44x44Logo.scale-400.png" 
+                   VerticalAlignment="Center" 
+                   HorizontalAlignment="Center" 
+                   Opacity="0.1"/>
+        </Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="SignUpColumn" Width="*"/>
+                <ColumnDefinition x:Name="ImageColumn" Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid Padding="30,20,20,0">
+                <TextBlock Text="Sign Up." 
+                           FontWeight="SemiBold" 
+                           FontSize="45" />
+                <StackPanel VerticalAlignment="Center" 
+                            Margin="0,40,0,0">
+                    <TextBlock Text="Create an account."
+                               FontSize="35"  />
+                    <Grid >
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="auto"/>
+                            <RowDefinition Height="20"/>
+                        </Grid.RowDefinitions>
+                        <Grid Margin="0,30,0,0" 
+                              Height="85" 
+                              Width="85"  
+                              Tapped="UserPicturePanel_Tapped"   
+                              HorizontalAlignment="Center"
+                              PointerEntered="PersonPicturePanel_PointerEntered" 
+                              PointerExited="PersonPicturePanel_PointerExited">
+                            <PersonPicture x:Name="UserPersonPicture" 
+                                           Width="80"  
+                                           Visibility="Visible" />
+                            <Grid x:Name="UserPersonPictureCameraLogoPanel" 
+                                  Width="82" 
+                                  Visibility="Collapsed" 
+                                  Height="82" 
+                                  CornerRadius="40" 
+                                  BorderBrush="LightGray" 
+                                  BorderThickness="1">
+                                <Grid Background="{ThemeResource AppMainBackgroundBrush}" 
+                                      Opacity="0.9"/>
+                                <TextBlock Text="&#xE722;" 
+                                           FontSize="30"  
+                                           HorizontalAlignment="Center" 
+                                           VerticalAlignment="Center" 
+                                           FontFamily="Segoe MDL2 Assets" />
+
+                            </Grid>
+                            <FlyoutBase.AttachedFlyout>
+                                <MenuFlyout Placement="BottomEdgeAlignedLeft" >
+                                    <MenuFlyoutItem Text="Upload From System" 
+                                                    Tag="Upload" 
+                                                    Click="PictureUploadOption_Click"/>
+                                    <MenuFlyoutItem Text="Capture Image" 
+                                                    Tag="Capture" 
+                                                    Click="PictureUploadOption_Click"/>
+
+                                    <MenuFlyoutItem x:Name="ViewImageMenuFlyoutItem" 
+                                                    Text="View Image" 
+                                                    Tag="View" 
+                                                    Visibility="Collapsed" 
+                                                    Click="PictureUploadOption_Click"/>
+                                </MenuFlyout>
+                            </FlyoutBase.AttachedFlyout>
+                        </Grid>
+                        <TextBlock x:Name="PictureAlertTextBlock" 
+                                   Text="Please Upload Picture" 
+                                   FontSize="11" 
+                                   Grid.Row="1" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Center" 
+                                   Foreground="Gray"
+                                  Visibility="Collapsed"/>
+                    </Grid>
+
+                    <Grid  HorizontalAlignment="Stretch" 
+                           Margin="2,15,0,5">
+                        <TextBlock Text="Name" 
+                                   FontSize="16" 
+                                   Margin="0,0,0,0"/>
+                        <TextBlock x:Name="NameAlertTextBlock" 
+                                   Text="*Please Enter Valid Name" 
+                                   FontSize="11" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Right" 
+                                   Foreground="Red"  
+                                   Visibility="Collapsed"/>
+                    </Grid>
+                    <TextBox x:Name="NameTextBox" 
+                             Height="40" 
+                             BorderThickness="1" 
+                             CornerRadius="5"  
+                             HorizontalAlignment="Stretch" 
+                             IsSpellCheckEnabled="False"
+                             Padding="5,10,0,0" 
+                             PlaceholderText="Enter your name"/>
+
+                    <Grid Margin="2,20,0,5">
+                        <TextBlock Text="Email" FontSize="16" />
+                        <TextBlock x:Name="EmailAlertTextBlock" 
+                                   Text="*Please Enter Vaild Email" 
+                                   FontSize="11" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Right" 
+                                   Foreground="Red" 
+                                   Visibility="Collapsed"/>
+                    </Grid>
+                    <TextBox x:Name="EmailTextBox" 
+                             Height="40" 
+                             BorderThickness="1" 
+                             CornerRadius="5"  
+                             HorizontalAlignment="Stretch" 
+                             Padding="5,10,0,0" 
+                             IsSpellCheckEnabled="False" 
+                             PlaceholderText="Enter your email"/>
+
+                    <Grid Margin="2,20,0,5" >
+                        <TextBlock Text="Password" 
+                                   FontSize="16" 
+                                   HorizontalAlignment="Stretch" />
+                        <TextBlock x:Name="PasswordAlertTextBlock" 
+                                   Text="*Please Enter Valid Password" 
+                                   VerticalAlignment="Center" 
+                                   HorizontalAlignment="Right" 
+                                   FontSize="11" Foreground="Red" Visibility="Collapsed"/>
+                    </Grid>
+                    <PasswordBox x:Name="PasswordPasswordBox" 
+                                 Height="40"
+                                 BorderThickness="1" 
+                                 CornerRadius="5"  
+                                 IsPasswordRevealButtonEnabled="True"
+                                 HorizontalAlignment="Stretch" 
+                                 Padding="5,10,0,0" 
+                                 PlaceholderText="Enter your password"/>
+
+                    <Grid Margin="2,20,0,5">
+                        <TextBlock Text="Re-enter Password" FontSize="16" />
+                        <TextBlock x:Name="RePasswordAlertTextBlock" 
+                                   Text="*Password Doesn't Match"  
+                                   HorizontalAlignment="Right"  
+                                   VerticalAlignment="Center" 
+                                   Margin="0,0,0,0" 
+                                   FontSize="11" 
+                                   Foreground="Red" 
+                                  Visibility="Collapsed"/>
+                    </Grid>
+                    <PasswordBox x:Name="RePasswordPasswordBox" 
+                                 Height="40" 
+                                 BorderThickness="1"
+                                 IsPasswordRevealButtonEnabled="True"
+                                 CornerRadius="5" 
+                                 HorizontalAlignment="Stretch" 
+                                 Padding="5,10,0,0" 
+                                 PlaceholderText="Re-enter password"/>
+
+                    <Button x:Name="SignUpButton" Content="Sign Up" 
+                            Margin="0,40,0,0" 
+                            HorizontalAlignment="Stretch" 
+                            Height="40" 
+                            Click="SignUpButton_Click"
+                            Style="{StaticResource AccentButtonStyle}"/>
+                    <StackPanel Orientation="Horizontal" Margin="0,30,0,0">
+                        <TextBlock Text="If you already have an account," Margin="0,5,5,0"/>
+                        <HyperlinkButton Name="SignInPageNavigateHyperlinkButton" Content="Click Here." Click="SignInPageNavigateHyperlinkButton_Click"/>
+                    </StackPanel>
+                </StackPanel>
+            </Grid>
+            <Grid Grid.Column="1" >
+                <StackPanel Margin="20,30,30,0">
+                    <TextBlock Text="Thank you for choosing" TextWrapping="WrapWholeWords" FontSize="35" Foreground="SteelBlue"/>
+                    <TextBlock Text="ZOHO Projects." FontSize="35" Foreground="SteelBlue"/>
+                    <TextBlock Text="Helps you plan your projects, track work efficiently, and collaborate with your team, wherever they are."  Margin="0,10,0,0"
+                               FontWeight="SemiBold" TextWrapping="WrapWholeWords" FontSize="18" Foreground="SteelBlue"/>
+                    <Image Source="/Assets/SignUpImage.png" 
+                           Margin="0,50,0,0"
+                           Width="480"
+                       Height="390"
+                       Stretch="Fill"
+                       VerticalAlignment="Center" 
+                       HorizontalAlignment="Center"/>
+                </StackPanel>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

@@ -1,0 +1,129 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.TaskUserControl.TaskKanbanViewBoardItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.TaskUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:helper="using:Projects.Core.Helper"
+    xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl" xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <SwipeItems x:Key="LeftSwipeItemsDelete" Mode="Execute">
+            <SwipeItem Text="Delete" 
+                       Foreground="White"
+                       IconSource="{StaticResource DeleteIcon}" 
+                       Invoked="DeleteSwipeItem_Invoked"
+                       Background="Red"/>
+        </SwipeItems>
+    </UserControl.Resources>
+
+    <SwipeControl Background="{ThemeResource AppMainBackgroundBrush}" 
+                  CornerRadius="4" 
+                  LeftItems="{StaticResource LeftSwipeItemsDelete}">
+
+        <Grid   x:Name="TaskPanel" 
+                BorderBrush="LightGray" 
+                BorderThickness="1" 
+                CornerRadius="4" 
+                Padding="5,10,5,10" 
+                Loaded="TaskPanel_Loaded" 
+                Margin="0" 
+                SizeChanged="TaskPanel_SizeChanged" 
+                Unloaded="TaskPanel_Unloaded">
+
+            <Grid.RowDefinitions>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+                <RowDefinition Height="auto"/>
+            </Grid.RowDefinitions>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="auto" MinWidth="30"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <CheckBox   x:Name="TaskSelectCheckBox" 
+                        Grid.Row="0"
+                        Grid.Column="0"
+                        IsChecked="{x:Bind _ZTask.IsChecked,Mode=TwoWay}" 
+                        MinWidth="20"
+                        Margin="5,0,0,0"
+                        Visibility="Visible" 
+                        HorizontalAlignment="Left" 
+                        VerticalAlignment="Top"
+                        Checked="TaskSelectCheckBox_Checked" 
+                        Unchecked="TaskSelectCheckBox_Unchecked"/>
+
+            <TextBlock  Text="!" 
+                        Grid.Row="0"
+                        Grid.Column="1"
+                        Margin="5,5,0,0"
+                        Foreground="{x:Bind helper:ZTaskHelper.PriorityBrush(_ZTask.Priority), Mode=OneWay}" 
+                        FontWeight="SemiBold" 
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top"  />
+
+            <TextBlock  Text="{x:Bind _ZTask.Name,Mode=OneWay}" 
+                        Grid.Row="0"
+                        Grid.Column="2"
+                        Margin="-10,5,0,0"
+                        FontWeight="Medium"
+                        TextTrimming="CharacterEllipsis"
+                        HorizontalAlignment="Left"
+                        VerticalAlignment="Top" />
+
+           
+            <userusercontrol:UserPersonPictureControl   Grid.Row="1"
+                                                        Grid.Column="1"
+                                                        Margin="0,0,0,0"
+                                                        HorizontalAlignment="Center" 
+                                                        VerticalAlignment="Center"
+                                                        DataContext="{x:Bind  _ZTask.Owner,Mode=OneWay}"/>
+
+            <Button Content="&#xE70D;" 
+                    Grid.Row="1"
+                     Grid.Column="0"
+                    FontSize="10" 
+                    FontWeight="Bold" 
+                    HorizontalAlignment="Left"
+                    Padding="6"
+                    Margin="0,5,0,0"
+                    Style="{StaticResource SymbolNoBGButtonStyle}"
+                    VerticalAlignment="Center">
+                <Button.Flyout>
+                    <Flyout x:Name="BriewViewFlyout" Placement="BottomEdgeAlignedLeft"  >
+                        <appusercontrol:TaskBriefViewControl DataContext="{x:Bind _ZTask,Mode=OneWay}"/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+            <TextBlock Text="{x:Bind helper:ZTaskHelper.ConvertTaskStatusToString(_ZTask.Status),Mode=OneWay}" 
+                        Grid.Row="1"
+                        Grid.Column="2"
+                        Height="20" 
+                        Padding="0"
+                        Margin="10,0,0,0"
+                        TextTrimming="CharacterEllipsis" />
+            <TextBlock  x:Name="MilestoneName"
+                        Grid.Row="2"
+                        Grid.ColumnSpan="3"
+                        Margin="5,3,0,0" 
+                        HorizontalAlignment="Left"
+                        Text="{x:Bind _ZTask.Milestone.Name,Mode=OneWay}" 
+                        TextTrimming="CharacterEllipsis" 
+                        VerticalAlignment="Center"/>
+            <TextBlock  x:Name="ProjectName" 
+                        Margin="5,3,0,0" 
+                         Grid.Row="3"
+                        Grid.ColumnSpan="3"
+                        HorizontalAlignment="Left"
+                        Text="{x:Bind _ZTask.Project.Name,Mode=OneWay}" 
+                        TextTrimming="CharacterEllipsis" 
+                        VerticalAlignment="Center"/>
+            
+        </Grid>
+
+    </SwipeControl>
+</UserControl>

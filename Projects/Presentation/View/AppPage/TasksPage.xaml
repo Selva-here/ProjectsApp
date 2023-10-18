@@ -1,0 +1,633 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.AppPage.TasksPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppPage"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+     xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls"
+    xmlns:ui="using:Microsoft.Toolkit.Uwp.UI"
+    xmlns:media="using:Microsoft.Toolkit.Uwp.UI.Media"
+    xmlns:userUserControl="using:Projects.Presentation.View.AppUserControl.UserUserControl"
+   xmlns:taskusercontrol="using:Projects.Presentation.View.AppUserControl.TaskUserControl" 
+    xmlns:entity="using:Projects.Core.Entity" 
+    xmlns:entityobj="using:Projects.Core.EntityObj" xmlns:controls1="using:Microsoft.UI.Xaml.Controls" xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl" xmlns:helper="using:Projects.Core.Helper">
+    <Page.Resources>
+        <Style x:Name="PageSymbolWindows11ButtonStyle" TargetType="Button" BasedOn="{StaticResource SymbolWindows11ButtonStyle}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+        <Style x:Name="PageSymbolAccentButtonStyle" TargetType="Button" BasedOn="{StaticResource SymbolAccentButtonStyle}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="40"/>
+            <Setter Property="Height" Value="40"/>
+            <Setter Property="Margin" Value="5,0,0,0"/>
+        </Style>
+        <Style x:Name="PopupWindows11ButtonStyle" TargetType="Button" BasedOn="{StaticResource Windows11ButtonStyle}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="15,0,0,0"/>
+        </Style>
+        <Style x:Name="PopupAccentButtonStyle" TargetType="Button" BasedOn="{StaticResource AccentButtonStyle}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="Width" Value="70"/>
+            <Setter Property="Height" Value="30"/>
+            <Setter Property="Margin" Value="15,0,0,0"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="UnavoidableTextBlockStyle">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Text" Value="*"/>
+        </Style>
+        <ui:AttachedDropShadow x:Key="CommonAttachedDropShadow" Offset="10,10"
+                               BlurRadius="10" Opacity="1" Color="Red"/>
+        <media:AttachedCardShadow x:Key="CommonAttachedCardShadow" Offset="10,10"
+                                  BlurRadius="10" Opacity="1" Color="Red"/>
+    </Page.Resources>
+
+    <Grid x:Name="TasksPagePanel" 
+        Padding="0,0,0,0" 
+          Loaded="PagePanel_Loaded" 
+          Unloaded="PagePanel_Unloaded">
+        <VisualStateManager.VisualStateGroups>
+            <VisualStateGroup>
+                <VisualState>
+                    <VisualState.StateTriggers>
+                        <AdaptiveTrigger MinWindowWidth="800"/>
+                    </VisualState.StateTriggers>
+                    <VisualState.Setters>
+                        <Setter Target="SearchAutoSuggestBox.(Grid.ColumnSpan)" Value="1"/>
+                        <Setter Target="SearchAutoSuggestBox.(Grid.Row)" Value="0"/>
+                        <Setter Target="SearchAutoSuggestBox.(Grid.Column)" Value="1"/>
+                        <Setter Target="SearchAutoSuggestBox.Margin" Value="0"/>
+                        <Setter Target="SearchAutoSuggestBox.MaxWidth" Value="600"/>
+                        <Setter Target="MultiSelectPopup.HorizontalOffset" Value="-210"/>
+                    </VisualState.Setters>
+                </VisualState>
+            </VisualStateGroup>
+        </VisualStateManager.VisualStateGroups>
+        <Grid x:Name="TasksPageContentPanel" >
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="Auto" />
+                <RowDefinition Height="*"/>
+            </Grid.RowDefinitions>
+
+            <Grid   Background="{ThemeResource AppMainBackgroundBrush}" 
+                CornerRadius="5"
+                Grid.Row="0" 
+                Padding="10,15">
+                <Grid.RowDefinitions>
+                    <RowDefinition x:Name="FuntionBarFirstRow" Height="auto"/>
+                    <RowDefinition  x:Name="FuntionBarSecondRow" Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="auto"/>
+                </Grid.ColumnDefinitions>
+
+                <Button Style="{StaticResource Windows11ButtonStyle}" 
+                    Height="40"
+                    Margin="0,0,20,0">
+                    <StackPanel Orientation="Horizontal" 
+                            VerticalAlignment="Center">
+                        <TextBlock  x:Name="HeaderTextBlock" 
+                                Text="All"  
+                                Tag="All" 
+                                FontWeight="Medium"
+                                FontSize="22" />
+                        <TextBlock x:Name="DownSymbol" 
+                                FontFamily="Segoe MDL2 Assets" 
+                                Text="&#xE70D;"
+                                FontSize="13" 
+                                Margin="8,12,0,0">
+                        </TextBlock>
+                    </StackPanel>
+                    <Button.Flyout>
+                        <MenuFlyout x:Name="HeaderMenuFlyout" Placement="BottomEdgeAlignedLeft"  >
+                            <MenuFlyoutSubItem Text="Predefined">
+                                <MenuFlyoutItem Text="All" Tag="All" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Open" Tag="Open" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Closed" Tag="Closed" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Overdue" Tag="Overdue" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Due Today" Tag="DueToday" Click="HeaderMenuFlyoutItem_Click"/>
+                            </MenuFlyoutSubItem>
+                            <MenuFlyoutSubItem Text="Defined">
+                                <MenuFlyoutItem Text="My Open" Tag="MyOpen" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="My Closed" Tag="MyClosed" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="My Overdue" Tag="MyOverdue" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Today Assigned" Tag="TodayAssigned" Click="HeaderMenuFlyoutItem_Click"/>
+                                <MenuFlyoutItem Text="Created By Me" Tag="CreatedByMe" Click="HeaderMenuFlyoutItem_Click"/>
+                            </MenuFlyoutSubItem>
+                        </MenuFlyout>
+                    </Button.Flyout>
+                </Button>
+
+                <AutoSuggestBox x:Name="SearchAutoSuggestBox" 
+                            x:Uid="SearchTasksPlaceholder" 
+                            Height="40"
+                            Grid.Row="1"
+                            Grid.ColumnSpan="3"
+                            HorizontalAlignment="Stretch"
+                            IsSuggestionListOpen="False" 
+                            KeyDown="SearchAutoSuggestBox_KeyDown"
+                            Margin="0,10,0,0"
+                            MaxWidth="2000"
+                            QueryIcon="Find"
+                            TextChanged="SearchAutoSuggestBox_TextChanged"
+                            VerticalAlignment="Center"
+                            Visibility="Visible"
+                            VerticalContentAlignment="Center"/>
+
+                <Popup  x:Name="MultiSelectPopup"
+                    IsOpen="False"
+                    Grid.Row="1"
+                    Grid.Column="1"
+                    HorizontalOffset="-150"  
+                    HorizontalAlignment="Center"
+                    VerticalAlignment="Bottom"
+                    VerticalOffset="10" >
+                    <controls:DropShadowPanel BlurRadius="30"
+                                  ShadowOpacity="0.2"
+                                  OffsetX="10"
+                                  OffsetY="10"
+                                  Color="Black">
+                        <Grid   Background="White"
+                            BorderBrush="LightGray"
+                            BorderThickness="1"
+                            CornerRadius="4"
+                            HorizontalAlignment="Center"
+                            Padding="10,10,10,10">
+                            <Grid.RowDefinitions>
+                                <RowDefinition Height="auto"/>
+                                <RowDefinition Height="auto"/>
+                            </Grid.RowDefinitions>
+
+                            <TextBlock  Text="{x:Bind GetTaskCheckedCount(_CheckedTaskCollection.Count),Mode=OneWay}"
+                                Foreground="Gray"
+                                FontSize="16"
+                                FontWeight="Medium"
+                                HorizontalAlignment="Center"
+                                VerticalAlignment="Center"
+                                Margin="0,0,0,0"/>
+                            <Button x:Name="CheckAllTasksButton"
+                            Content="Check All"
+                            Click="CheckAllTasksButton_Click"
+                            FontSize="12"
+                            HorizontalAlignment="Right"
+                            Margin="0,5,0,0"
+                            Style="{StaticResource NoHoverBGTextBlockButtonStyle}"
+                            Tag="Check"
+                            VerticalAlignment="Top">
+                            </Button>
+                            
+                            <StackPanel Orientation="Horizontal"
+                                Grid.Row="1">
+                                <StackPanel.Resources>
+                                    <Style TargetType="Button" BasedOn="{StaticResource NoBGButtonStyle}">
+                                        <Setter Property="Margin" Value="5,0,0,0"/>
+                                    </Style>
+                                    <Style x:Name="MultiSelectPopupSymbolNoBGButtonStyle" TargetType="Button" BasedOn="{StaticResource SymbolNoBGButtonStyle}">
+                                        <Setter Property="Height" Value="38"/>
+                                        <Setter Property="Width" Value="38"/>
+                                        <Setter Property="VerticalAlignment" Value="Center"/>
+                                        <Setter Property="Margin" Value="5,0,0,0"/>
+                                    </Style>
+                                </StackPanel.Resources>
+                                <Button Content="Priority">
+                                    <Button.Flyout>
+                                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                            <MenuFlyoutItem Text="None" Click="PriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Low" Click="PriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Medium" Click="PriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="High" Click="PriorityMenuFlyoutItem_Click"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Content="Status">
+                                    <Button.Flyout>
+                                        <MenuFlyout x:Name="StatusFlyout" Placement="BottomEdgeAlignedLeft">
+                                            <MenuFlyoutItem Text="Open"  Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="In Progress" Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="In Review" Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="To Be Tested"  Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="On Hold"  Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Deferred"  Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Closed"  Click="StatusMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Cancelled" Click="StatusMenuFlyoutItem_Click"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Content="Start Date">
+                                    <Button.Flyout>
+                                        <Flyout x:Name="MultiSelectStartDateFlyout" Placement="BottomEdgeAlignedLeft">
+                                            <StackPanel Padding="10" Background="White">
+                                                <StackPanel x:Name="MultiSelectStartDateRadioButtonPanel" 
+                                                    Orientation="Horizontal"
+                                                    Loaded="MultiSelectStartDateRadioButtonPanel_Loaded">
+                                                    <RadioButton Content="Prepone" IsChecked="True" Tag="StartDate" Click="MultiSelectStartDateRadioButton_Click"/>
+                                                    <RadioButton Content="Postpone" Tag="StartDate" Click="MultiSelectStartDateRadioButton_Click"/>
+                                                    <RadioButton Content="Date" Tag="StartDate" Click="MultiSelectStartDateRadioButton_Click"/>
+                                                </StackPanel>
+                                                <Grid Height="50" 
+                                              Margin="0,10,0,0"
+                                              VerticalAlignment="Center">
+                                                    <controls1:NumberBox    x:Name="StartDateNumberBox"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Height="40"
+                                                                    Value="1"
+                                                                    Padding="10,8,0,0"
+                                                                    Minimum="1"
+                                                                    Maximum="100"
+                                                                    SpinButtonPlacementMode="Inline"
+                                                                    SmallChange="1"
+                                                                    VerticalAlignment="Center"/>
+                                                    <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                                                                DateChanged="StartDateCalendarDatePicker_DateChanged"
+                                                                Height="40"
+                                                                HorizontalAlignment="Stretch"
+                                                                VerticalAlignment="Center"
+                                                                Visibility="Collapsed"/>
+
+                                                </Grid>
+                                                <Button x:Name="MultiSelectStartDateApplyButton"
+                                                Content="Apply"
+                                                Click="MultiSelectStartDateApplyButton_Click"
+                                                Height="38"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,10,0,0"
+                                                Style="{StaticResource AccentButtonStyle}"
+                                                Tag="Prepone"/>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Content="Due Date">
+                                    <Button.Flyout>
+                                        <Flyout x:Name="MultiSelectDueDateFlyout" Placement="BottomEdgeAlignedLeft">
+                                            <StackPanel Padding="10" Background="White">
+                                                <StackPanel x:Name="MultiSelectEndDateRadioButtonPanel" 
+                                                    Orientation="Horizontal"
+                                                    Loaded="MultiSelectEndDateRadioButtonPanel_Loaded">
+                                                    <RadioButton Content="Prepone" IsChecked="True" Tag="DueDate" Click="MultiSelectDueDateRadioButton_Click"/>
+                                                    <RadioButton Content="Postpone" Tag="DueDate" Click="MultiSelectDueDateRadioButton_Click"/>
+                                                    <RadioButton Content="Date" Tag="DueDate" Click="MultiSelectDueDateRadioButton_Click"/>
+                                                </StackPanel>
+                                                <Grid Height="50" 
+                                              Margin="0,10,0,0"
+                                              VerticalAlignment="Center">
+                                                    <controls1:NumberBox    x:Name="DueDateNumberBox"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Height="40"
+                                                                    Value="1"
+                                                                    Minimum="1"
+                                                                    Maximum="100"
+                                                                    Padding="10,8,0,0"
+                                                                    SpinButtonPlacementMode="Inline"
+                                                                    SmallChange="1"
+                                                                    VerticalAlignment="Center"
+                                                                    />
+                                                    <CalendarDatePicker x:Name="DueDateCalendarDatePicker"
+                                                                DateChanged="DueDateCalendarDatePicker_DateChanged"
+                                                                Height="40"
+                                                                HorizontalAlignment="Stretch"
+                                                                VerticalAlignment="Center"
+                                                                Visibility="Collapsed"/>
+
+                                                </Grid>
+                                                <Button x:Name="MultiSelectDueDateApplyButton"
+                                            Content="Apply"
+                                                Click="MultiSelectDueDateApplyButton_Click"
+                                                Height="38"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,10,0,0"
+                                                Style="{StaticResource AccentButtonStyle}"
+                                                Tag="Prepone"/>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button Content="Owner" Visibility="Collapsed">
+                                    <Button.Flyout>
+                                        <Flyout x:Name="MultiSelectOwnerFlyout" Placement="BottomEdgeAlignedLeft" 
+                                        Closing="MultiSelectOwnerFlyout_Closing">
+                                            <StackPanel Background="White" Padding="10">
+                                                <StackPanel x:Name="MultiSelectOwnerRadioButtonPanel" 
+                                                    Orientation="Horizontal"
+                                                    Loaded="MultiSelectOwnerRadioButtonPanel_Loaded">
+                                                    <RadioButton Content="Replace" IsChecked="True" Click="MultiSelectOwnerRadioButton_Click" Visibility="Collapsed"/>
+                                                    <RadioButton Content="Add" Click="MultiSelectOwnerRadioButton_Click" Visibility="Collapsed"/>
+                                                </StackPanel>
+                                                <Grid >
+                                                    <StackPanel x:Name="ReplacePanel">
+                                                        <StackPanel Margin="0,10,0,0">
+                                                            <TextBlock Text="Current Owner"/>
+                                                            <Grid  Margin="0,10,0,0" Height="50">
+                                                                <userUserControl:SelectedUserViewControl x:Name="CurrentOwnerControl"
+                                                                                             DataContext="{x:Bind CurrentOwner,Mode=OneWay}"
+                                                                                             Visibility="Collapsed"
+                                                                                             Tapped="CurrentOwnerControl_Tapped"/>
+
+                                                                <AutoSuggestBox x:Name="CurrentOwnerAutoSuggestionBox"
+                                                                        Tag="CurrentOwner"
+                                                                        TextChanged="OwnerSearchAutoSuggestionBox_TextChanged"
+                                                                        SuggestionChosen="OwnerSearchAutoSuggestionBox_SuggestionChosen"
+                                                                        QuerySubmitted="OwnerSearchAutoSuggestionBox_QuerySubmitted"
+                                                                        Height="40" 
+                                                                        HorizontalAlignment="Stretch"/>
+                                                            </Grid>
+                                                        </StackPanel>
+                                                        <StackPanel Margin="0,10,0,0">
+                                                            <TextBlock Text="Relpace Owner"/>
+                                                            <Grid  Margin="0,10,0,0" Height="50">
+                                                                <userUserControl:SelectedUserViewControl x:Name="ReplaceOwnerControl"
+                                                                                             DataContext="{x:Bind ReplaceOwner,Mode=OneWay}"
+                                                                                             Visibility="Collapsed"
+                                                                                             Tapped="ReplaceOwnerControl_Tapped"/>
+
+                                                                <AutoSuggestBox x:Name="ReplaceOwnerAutoSuggestionBox"
+                                                                         Tag="ReplaceOwner"
+                                                                        TextChanged="OwnerSearchAutoSuggestionBox_TextChanged"
+                                                                        SuggestionChosen="OwnerSearchAutoSuggestionBox_SuggestionChosen"
+                                                                        QuerySubmitted="OwnerSearchAutoSuggestionBox_QuerySubmitted"
+                                                                        Height="40" 
+                                                                        HorizontalAlignment="Stretch"/>
+
+                                                            </Grid>
+                                                        </StackPanel>
+                                                    </StackPanel>
+
+
+                                                    <StackPanel x:Name="AddPanel"
+                                                        Margin="0,10,0,0" 
+                                                        Visibility="Collapsed">
+                                                        <TextBlock Text="Add Owner"/>
+                                                        <Grid  Margin="0,10,0,0" Height="50" >
+                                                            <userUserControl:SelectedUserViewControl x:Name="AddOwnerControl"
+                                                                                             DataContext="{x:Bind AddOwner,Mode=OneWay}"
+                                                                                             Visibility="Collapsed"
+                                                                                             Tapped="AddOwnerControl_Tapped"/>
+                                                            <AutoSuggestBox x:Name="AddOwnerAutoSuggestionBox" 
+                                                                     Tag="AddOwner"
+                                                                    TextChanged="OwnerSearchAutoSuggestionBox_TextChanged"
+                                                                    SuggestionChosen="OwnerSearchAutoSuggestionBox_SuggestionChosen"
+                                                                    QuerySubmitted="OwnerSearchAutoSuggestionBox_QuerySubmitted"
+                                                                    Height="40"
+                                                                    HorizontalAlignment="Stretch"
+                                                                    Margin="0,0,0,0"/>
+                                                        </Grid>
+                                                    </StackPanel>
+
+                                                </Grid>
+                                                <Button x:Name="MultiSelectOwnerApplyButton"
+                                                Content="Apply"
+                                                Click="MultiSelectOwnerApplyButton_Click"
+                                                Height="38"
+                                                HorizontalAlignment="Stretch"
+                                                Margin="0,10,0,0"
+                                                Style="{StaticResource AccentButtonStyle}"/>
+                                            </StackPanel>
+                                        </Flyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <Button  x:Name="MultiSelectDeleteButton"
+                                 Click="MultiSelectDeleteButton_Click"
+                                 Content="&#xE74D;" 
+                                 Foreground="Red"
+                                 Style="{StaticResource MultiSelectPopupSymbolNoBGButtonStyle}"/>
+                                <Button  Click="MultiSelectPopupCancelButton"
+                                 Content="&#xF78A;" 
+                                 Style="{StaticResource MultiSelectPopupSymbolNoBGButtonStyle}"/>
+                            </StackPanel>
+                        </Grid>
+                    </controls:DropShadowPanel>
+                </Popup>
+
+                <StackPanel Grid.Column="2" 
+                        Margin="15,0,0,0"
+                        Orientation="Horizontal">
+
+                    <StackPanel Orientation="Horizontal" 
+                            Margin="0,0,10,0">
+                        <Button Click="AddButton_Click"
+                        Content="&#xE710;"
+                        Style="{StaticResource PageSymbolWindows11ButtonStyle}"
+                        ToolTipService.ToolTip="Add Task" 
+                        ToolTipService.Placement="Bottom" >
+                        </Button>
+                        <Grid>
+                            <Button Content="&#xE71C;" 
+                        Click="FilterButton_Click"
+                        Style="{StaticResource PageSymbolWindows11ButtonStyle}"
+                        ToolTipService.ToolTip="Filter Task" 
+                        ToolTipService.Placement="Bottom" />
+                            <Grid x:Name="CancelFilterPanel"
+                          Background="Red"
+                          CornerRadius="3"
+                          Width="15"
+                          Height="15"
+                          HorizontalAlignment="Right"
+                          Tapped="CancelFilterPanel_Tapped"
+                          VerticalAlignment="Top"
+                           Visibility="{x:Bind helper:GeneralHelper.ConvertBooleanToVisibility(TasksFilterControl.IsFilterApplied),Mode=OneWay}">
+                                <TextBlock Foreground="White"
+                                   FontSize="8"
+                                   FontWeight="Bold"
+                                   FontFamily="Segoe MDL2 Assets"
+                                   Text="&#xF78A;"
+                                   HorizontalAlignment="Center"
+                                   VerticalAlignment="Center"/>
+                            </Grid>
+                        </Grid>
+
+                        <Button x:Name="CloseFilterPanelButton" 
+                        Click="CloseFilterPanelButton_Click"
+                        Width="0">
+                            <Button.KeyboardAccelerators>
+                                <KeyboardAccelerator 
+                            Key="Escape" />
+                            </Button.KeyboardAccelerators>
+                        </Button>
+                    </StackPanel>
+
+                    <StackPanel x:Name="ViewStyleButtonPanel" Orientation="Horizontal" >
+                        <Button x:Name="PlainViewButton" 
+                            Click="ViewButton_Click"
+                            Content="&#xE8FD;"
+                            Style="{StaticResource PageSymbolAccentButtonStyle}"
+                            Tag="Plain"
+                            ToolTipService.ToolTip="Plain View" 
+                            ToolTipService.Placement="Bottom" >
+                        </Button>
+                        <Button x:Name="ClassicViewButton" 
+                            Click="ViewButton_Click"
+                            Content="&#xEA37;"
+                            Style="{StaticResource PageSymbolWindows11ButtonStyle}"
+                            Tag="Classic"
+                            ToolTipService.ToolTip="Classic View" 
+                            ToolTipService.Placement="Bottom" >
+                        </Button>
+                        <Button x:Name="KanbanViewButton"
+                            Click="ViewButton_Click"
+                            Style="{StaticResource PageSymbolWindows11ButtonStyle}"
+                            Tag="Kanban"
+                            ToolTipService.ToolTip="Kanban View" 
+                            ToolTipService.Placement="Bottom" >
+                            <TextBlock Text="&#xEA37;" RenderTransformOrigin="0.5,0.5">
+                                <TextBlock.RenderTransform>
+                                    <RotateTransform Angle="90"/>
+                                </TextBlock.RenderTransform>
+                            </TextBlock>
+                        </Button>
+                    </StackPanel>
+
+                </StackPanel>
+
+                <GridView  x:Name="AppliedFiltersAdaptiveGridView"
+                        Grid.Row="2"
+                       Grid.ColumnSpan="3"
+                        ItemsSource="{x:Bind _AppliedFilterCollection}"
+                        HorizontalAlignment="Stretch"
+                        IsItemClickEnabled="False"
+                        Margin="0,0,0,0"
+                        Padding="0"
+                        SelectionMode="None">
+                    <GridView.ItemTemplate>
+                        <DataTemplate x:DataType="x:String">
+                            <StackPanel BorderBrush="LightGray" 
+                              BorderThickness="1" 
+                              CornerRadius="2"
+                              Padding="3"
+                             Orientation="Horizontal">
+                                <TextBlock Text="{x:Bind}" 
+                                       FontSize="12"
+                                       VerticalAlignment="Center"/>
+                                <Button  x:Name="FilterPropertyCancelMethod"
+                                     Click="FilterPropertyCancelMethod_Click"
+                                    Content="&#xF78A;"
+                                     FontSize="10"
+                                     Padding="5"
+                                     Style="{StaticResource SymbolNoBGButtonStyle}"
+                                     Margin="10,2,0,0"
+                                     VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </DataTemplate>
+                    </GridView.ItemTemplate>
+
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" >
+                            <Setter Property="CornerRadius" Value="3"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                            <Setter Property="VerticalContentAlignment" Value="Stretch"/>
+                            <Setter Property="Padding" Value="0"/>
+                            <Setter Property="MinHeight" Value="10"/>
+                            <Setter Property="Margin" Value="0,5,10,0"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                    <GridView.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <controls:WrapPanel Orientation="Horizontal" >
+                            </controls:WrapPanel>
+                        </ItemsPanelTemplate>
+                    </GridView.ItemsPanel>
+                </GridView>
+            </Grid>
+
+            <SplitView x:Name="TasksPageSpiltView" 
+                   CornerRadius="4"
+                   DisplayMode="Inline"
+                   Grid.Row="1" 
+                   Margin="0,3,0,0"
+                   PaneBackground="Transparent"
+                   PanePlacement="Right">
+
+                <Grid x:Name="PanelsGrid" 
+                  Background="{ThemeResource AppMainBackgroundBrush}"
+                  CornerRadius="4">
+                    <Grid x:Name="PlainViewPanel" Tag="Plain" x:Load="True" Visibility="Visible"  >
+                        <taskusercontrol:TaskPlainViewControl x:Name="PlainViewControl" 
+                                                          Tag="Kanban"
+                                                          TaskCollection="{x:Bind _TaskCollection}"/>
+                    </Grid>
+                    <Grid x:Name="ClassicViewPanel" Tag="Classic"  x:Load="False" Visibility="Collapsed">
+                        <taskusercontrol:TaskClassicViewControl x:Name="ClassicViewControl" 
+                                                  Tag="Classic" 
+                                                  TaskCollection="{x:Bind _TaskCollection}" />
+                    </Grid>
+                    <Grid x:Name="KanbanViewPanel" Tag="Kanban" x:Load="False"  Visibility="Collapsed">
+                        <taskusercontrol:TaskKanbanViewControl x:Name="KanbanViewControl" 
+                                                  Tag="Kanban" 
+                                                  TaskCollection="{x:Bind _TaskCollection}" />
+                    </Grid>
+
+                </Grid>
+                <SplitView.Pane >
+                    <Grid Margin="3,0,0,0">
+                        <appusercontrol:FilterControl x:Name="TasksFilterControl" CurrentFilterItem="Task"/>
+                    </Grid>
+                </SplitView.Pane>
+            </SplitView>
+        </Grid>
+
+        <Grid x:Name="NewTaskPanel"
+              x:Load="False"
+              CornerRadius="5" >
+            <Grid.RowDefinitions>
+                <RowDefinition  Height="auto"/>
+                <RowDefinition  Height="*"/>
+            </Grid.RowDefinitions>
+
+
+            <Grid Background="{ThemeResource AppMainBackgroundBrush}" Grid.Row="0"  
+              Padding="10,15,10,15" >
+
+                <TextBlock  FontSize="24"
+                        Margin="0,0,0,0"
+                        Text="New Task" 
+                        VerticalAlignment="Center"/>
+                <StackPanel Orientation="Horizontal"
+                        HorizontalAlignment="Right">
+                    <Button x:Name="NewWindowButton"
+                            FontSize="22"
+                            Height="40"
+                            Margin="0,0,10,0"
+                            Click="NewWindowButton_Click"
+                            Content="&#xE78B;"
+                            HorizontalAlignment="Right"
+                            Style="{StaticResource SymbolWindows11ButtonStyle}"
+                            ToolTipService.ToolTip="Add Task" 
+                            ToolTipService.Placement="Bottom"
+                            Width="43"/>
+                    
+                    <Button x:Name="BackButton"
+                Height="40"
+                Margin="0,0,0,0"
+                Click="BackButton_Click"
+                Content="&#xF78A;"
+                Style="{StaticResource SymbolWindows11ButtonStyle}"
+                ToolTipService.ToolTip="Add Task" 
+                ToolTipService.Placement="Bottom"
+                Width="40"/>
+                </StackPanel>
+            </Grid>
+
+
+
+            <Grid  Background="Transparent"
+               CornerRadius="5"
+               Grid.Row="1"
+               Margin="0,2,0,0">
+                <taskusercontrol:AddNewTaskContentControl x:Name="PageAddNewTaskContentControl"/>
+            </Grid>
+        </Grid>
+    </Grid>
+</Page>

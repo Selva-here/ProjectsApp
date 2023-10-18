@@ -1,0 +1,33 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.MainPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl" 
+    xmlns:controls1="using:Microsoft.UI.Xaml.Controls">
+
+    <Grid  Loaded="MainPage_Loaded"
+           Unloaded="MainPage_Unloaded">
+
+        <appusercontrol:BackgroundControl />
+
+        <Grid >
+            <Frame x:Name="MainFrame" />
+        </Grid>
+        <controls1:InfoBar
+            x:Name="NotificationInfoBar"
+            BorderBrush="LightGray"
+            BorderThickness="1"
+            IsOpen="False"
+            Severity="Informational"
+            Message="Sample Meassage"
+            HorizontalAlignment="Left"
+            VerticalAlignment="Bottom"
+            Width="400"
+            Margin="30,0,0,30"/>
+    </Grid>
+</Page>

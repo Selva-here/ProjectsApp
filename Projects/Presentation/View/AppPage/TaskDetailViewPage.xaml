@@ -1,0 +1,530 @@
+﻿<Page
+    x:Class="Projects.Presentation.View.TaskDetailViewPage"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:entity="using:Projects.Core.Entity"
+    xmlns:muxc="using:Microsoft.UI.Xaml.Controls" 
+    xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" 
+    xmlns:appUserControls="using:Projects.Presentation.View.AppUserControl"
+    xmlns:helper="using:Projects.Core.Helper" 
+    xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl"
+     xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl" xmlns:taskusercontrol="using:Projects.Presentation.View.AppUserControl.TaskUserControl"
+    mc:Ignorable="d">
+    
+    <Page.Resources>
+       
+        <Style TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemExpanded}">
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="20,20,0,0"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+        </Style>
+      
+        <Style TargetType="controls:AdaptiveGridView">
+            <Setter Property="DesiredWidth" Value="650"/>
+            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+            <Setter Property="IsItemClickEnabled" Value="False"/>
+            <Setter Property="Margin" Value="-20,0,0,-20"/>
+            <Setter Property="ScrollViewer.VerticalScrollMode" Value="Disabled"/>
+            <Setter Property="ScrollViewer.HorizontalScrollMode" Value="Disabled"/>
+            <Setter Property="OneRowModeEnabled" Value="False"/>
+            <Setter Property="SelectionMode" Value="None"/>
+            <Setter Property="StretchContentForSingleRow" Value="False"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Name="DetailPanelTitleTextBlockStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="SemiLight"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Name="DetailPanelBodyTextBlockStyle">
+            <Setter Property="FontSize" Value="14"/>
+            <Setter Property="FontWeight" Value="Normal"/>
+        </Style>
+    </Page.Resources>
+
+    <Grid x:Name="TaskDetailViewPanel" 
+          CornerRadius="4"
+          SizeChanged="TaskDetailViewPanel_SizeChanged"
+          Loaded="TaskDetailViewPanel_Loaded"
+          Unloaded="TaskDetailViewPanel_Unloaded">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="auto"/>
+            <RowDefinition Height="*"/>
+        </Grid.RowDefinitions>
+
+        <Grid Background="{ThemeResource AppMainBackgroundBrush}"
+              CornerRadius="4"
+               Padding="10,5">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="auto"/>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="auto"/>
+            </Grid.ColumnDefinitions>
+
+
+            <Grid Grid.Column="0" 
+                  Padding="0,0,10,0" 
+                  Background="Transparent">
+                <muxc:ProgressRing Background="LightGray"
+                                   Foreground="{ThemeResource SystemAccentColor}"
+                                   Height="50"
+                                   HorizontalAlignment="Center"
+                                   IsIndeterminate="False"
+                                   Padding="0"
+                                   Value="{x:Bind _ZTask.CompletedPercentage,Mode=OneWay}" 
+                                   Width="{x:Bind Height}"
+                                   Visibility="Visible"
+                                   VerticalAlignment="Center">
+                </muxc:ProgressRing>
+                <TextBlock  HorizontalAlignment="Center"
+                            Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_ZTask.CompletedPercentage),Mode=OneWay}"
+                            VerticalAlignment="Center"/>
+            </Grid>
+
+            <Grid Grid.Column="1" 
+                  Margin="0,0,10,0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <Grid  Grid.Row="0" 
+                           Padding="0,0,0,0"
+                           VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions >
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="24" 
+                               FontWeight="SemiLight"
+                               Grid.Column="0"
+                               HorizontalAlignment="Center"
+                               Margin="5,0,0,0"
+                               Text="{x:Bind _ZTask.ID,Mode=OneWay}"
+                               VerticalAlignment="Center"/>
+                    <TextBlock FontSize="24" 
+                               Grid.Column="1"
+                               HorizontalAlignment="Left"
+                               Margin="15,0,0,0"
+                               Text="{x:Bind _ZTask.Name,Mode=OneWay}"
+                               TextTrimming="CharacterEllipsis"
+                               VerticalAlignment="Center"/>
+                </Grid>
+
+                <Grid Grid.Row="1"
+                    Padding="0,0,0,0"
+                    Margin="0,5,0,0"
+                    VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions >
+                        <ColumnDefinition Width="auto"/>
+                        <ColumnDefinition Width="*"/>
+                    </Grid.ColumnDefinitions>
+                    <TextBlock FontSize="14" 
+                               FontWeight="Medium"
+                               Grid.Column="0"
+                               Margin="5,0,0,0"
+                               Text="{x:Bind helper:ZTaskHelper.ConvertTaskStatusToString(_ZTask.Status),Mode=OneWay}" 
+                               VerticalAlignment="Center"/>
+                    <StackPanel Grid.Column="1" 
+                            HorizontalAlignment="Left"
+                            Margin="20,0,0,0"
+                            Orientation="Horizontal">
+                        <TextBlock FontSize="14" 
+                               Text="Created By"
+                               VerticalAlignment="Center"/>
+                        <userusercontrol:UserPersonPictureControl DataContext="{x:Bind _ZTask.CreatedUser,Mode=OneWay}"
+                                                                  ControlHeight="30"
+                                                                  Margin="10,0,0,0"/>
+                    </StackPanel>
+
+                </Grid>
+            </Grid>
+
+            <StackPanel Grid.Column="2" Orientation="Horizontal">
+                <Button x:Name="SplitViewButton" 
+                        Click="SplitViewButton_Click"
+                        Content="&#xEA37;"
+                        Height="40" 
+                        Width="40"
+                        Margin="0,0,5,0"
+                        HorizontalAlignment="Right" 
+                        Style="{StaticResource SymbolWindows11ButtonStyle}"
+                        Tag="No" />
+
+                <Button Click="BackButton_Click" 
+                        Content="&#xF78A;" 
+                        Height="40" 
+                        Width="40"
+                        HorizontalAlignment="Left"
+                        Style="{StaticResource SymbolWindows11ButtonStyle}"/>
+            </StackPanel>
+
+
+        </Grid>
+
+        <Grid CornerRadius="4"
+              Grid.Row="1"
+              Margin="0,3,0,0">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition x:Name="TasksListColumn" Width="400" MinWidth="200" MaxWidth="500"/>
+                <ColumnDefinition x:Name="GridSplitterColumn" Width="3"/>
+                <ColumnDefinition x:Name="TaskDetailColumn" Width="*" MinWidth="400"/>
+            </Grid.ColumnDefinitions>
+
+
+
+            <ListView   x:Name="TasksListView"
+                            Background="{ThemeResource AppMainBackgroundBrush}" 
+                            CornerRadius="4"
+                            Padding="5,0"
+                            Grid.Row="1"
+                            HorizontalContentAlignment="Stretch"  
+                            IsMultiSelectCheckBoxEnabled="False" 
+                            IsItemClickEnabled="True"   
+                            ItemsSource="{x:Bind _TaskCollection, Mode=OneWay}" 
+                            Margin="0,0,0,0" 
+                            ItemClick="TasksListView_ItemClick"
+                            SelectionMode="Single" >
+
+                <ListView.ItemTemplate >
+                    <DataTemplate x:DataType="entity:ZTask" >
+                        <Grid BorderBrush="LightGray" BorderThickness="0,0,0,1">
+                            <appUserControls:TaskDetailViewTaskListViewItemControl />
+                        </Grid>
+                    </DataTemplate>
+                </ListView.ItemTemplate>
+            </ListView>
+
+
+            <controls:GridSplitter  x:Name="GridSplitter"  
+                                    Grid.Column="1"
+                                    Margin="0,7">
+
+            </controls:GridSplitter>
+
+            <ScrollViewer   Background="{ThemeResource AppMainBackgroundBrush}"
+                            CornerRadius="4"
+                            Grid.Column="2"
+                            VerticalScrollBarVisibility="Hidden" 
+                            VerticalScrollMode="Enabled">
+                <Grid x:Name="DetailPanel" 
+                      Margin="0,0,0,0" 
+                      Padding="10,10,10,20">
+                    <Grid.RowDefinitions>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                        <RowDefinition Height="auto"/>
+                    </Grid.RowDefinitions>
+
+                    <StackPanel Margin="0,0,0,0">
+                        <TextBlock Text="Name" 
+                                    Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                        <Grid Margin="0,0,0,0"  Height="50">
+                            <TextBlock x:Name="NameTextBlock"
+                                                   Margin="2,5,0,0"
+                                                   Text="{x:Bind _ZTask.Name,Mode=OneWay}"
+                                                    Style="{StaticResource DetailPanelBodyTextBlockStyle}"
+                                                   Tapped="NameTextBlock_Tapped"
+                                                   VerticalAlignment="Center"/>
+                            <TextBox x:Name="NameTextBox"
+                                            Height="40" 
+                                            FontSize="14"
+                                            KeyDown="NameTextBox_KeyDown"
+                                            LostFocus="NameTextBox_LostFocus"
+                                            TextChanged="NameTextBox_TextChanged"
+                                            Margin="-2,8,0,0"
+                                            Padding="3,8,0,0"
+                                            Text="{x:Bind _ZTask.Name,Mode=TwoWay}"
+                                            VerticalAlignment="Center"
+                                            VerticalContentAlignment="Center"
+                                            Visibility="Collapsed"/>
+
+                        </Grid>
+                    </StackPanel>
+
+
+                    <StackPanel Grid.Row="1" Margin="0,10,0,0">
+                        <TextBlock Text="Milestone" 
+                                       Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                        <TextBlock  x:Name="MilestoneNameTextBlock"
+                                            Style="{StaticResource DetailPanelBodyTextBlockStyle}"
+                                            Margin="1,10,0,0"
+                                            Text="{x:Bind _ZTask.Milestone.Name,Mode=OneWay}"
+                                            VerticalAlignment="Center"/>
+
+                    </StackPanel>
+                    
+                    <StackPanel Grid.Row="2" Margin="0,20,0,0">
+                            <TextBlock Text="Project" 
+                                       Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <TextBlock  x:Name="ProjectNameTextBlock"
+                                            Style="{StaticResource DetailPanelBodyTextBlockStyle}"
+                                            Margin="1,10,0,0"
+                                            Text="{x:Bind _ZTask.Project.Name,Mode=OneWay}"
+                                            VerticalAlignment="Center"/>
+
+                        </StackPanel>
+
+
+                    <StackPanel   Grid.Row="3" Margin="0,20,0,0">
+                            <TextBlock Text="Priority" 
+                                               Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <Button x:Name="PriorityTextBlock"
+                                            FontSize="14"
+                                            Margin="1,10,0,0"
+                                            Padding="0"
+                                            Style="{StaticResource NoColorChangeTextBlockButtonStyle}"
+                                            VerticalAlignment="Center">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Bind _ZTask.Priority,Mode=OneWay}"/>
+                                        <TextBlock Style="{StaticResource ChevronDownSymbolTextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.Flyout>
+                                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                        <MenuFlyoutItem Text="None" Click="PriorityMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="Low" Click="PriorityMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="Medium" Click="PriorityMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="High" Click="PriorityMenuFlyoutItem_Click"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+                        </StackPanel>
+
+                        <StackPanel x:Name="OwnerPanel" 
+                                    Grid.Row="4"
+                                     Margin="0,20,0,0">
+
+                            <TextBlock Text="Owner"
+                                        Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <Grid Margin="0,5,0,0" Height="45">
+                                <AutoSuggestBox x:Name="OwnerSearchAutoSuggestBox"
+                                                Height="40"
+                                                Margin="0,3,0,0"
+                                                HorizontalAlignment="Stretch"
+                                                IsFocusEngagementEnabled="True"
+                                                QuerySubmitted="OwnerSearchAutoSuggestBox_QuerySubmitted"
+                                                SuggestionChosen="OwnerSearchAutoSuggestBox_SuggestionChosen"
+                                                TextChanged="OwnerSearchAutoSuggestBox_TextChanged"
+                                                Tag="Owner"
+                                                VerticalContentAlignment="Center"
+                                                VerticalAlignment="Center"
+                                                Visibility="Collapsed">
+                                    
+                                    <AutoSuggestBox.ItemTemplate>
+                                        <DataTemplate x:DataType="entity:ZUser" >
+                                            <userusercontrol:UserAutoSuggestionBoxSuggestionItemTemplateControl />
+                                        </DataTemplate>
+                                    </AutoSuggestBox.ItemTemplate>
+                                </AutoSuggestBox>
+                                <Grid x:Name="SelectedOwnerPanel"
+                                      VerticalAlignment="Center">
+                                    <userusercontrol:UserPersonPictureControl DataContext="{x:Bind SelectedOwner,Mode=OneWay}"
+                                                                              ControlHeight="30"
+                                                                              HorizontalAlignment="Left"/>
+                                    <TextBlock x:Name="SelectedOwnerNameTextBlock"
+                                               Margin="45,8,0,0"
+                                               Style="{StaticResource DetailPanelBodyTextBlockStyle}"
+                                               Text="{x:Bind SelectedOwner.Name,Mode=OneWay}"
+                                               Tapped="SelectedOwnerNameTextBlock_Tapped"
+                                               />
+                                </Grid>
+                            </Grid>
+                        </StackPanel>
+                   
+                    <controls:AdaptiveGridView Grid.Row="5" >
+                        <StackPanel  Margin="0,0,0,0" >
+                            
+                             <TextBlock Text="Completion Percentage"
+                                       Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <Grid Margin="0,0,0,0"  Height="40">
+                                <TextBlock x:Name="CompletionPercentageTextBlock"
+                                          Style="{StaticResource DetailPanelBodyTextBlockStyle}"
+                                           Margin="5,0,0,0"
+                                       Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_ZTask.CompletedPercentage),Mode=OneWay}"
+                                       Tapped="CompletionPercentageTextBlock_Tapped"
+                                       VerticalAlignment="Center"/>
+                                <Slider x:Name="CompletionPercentageSlider"
+                                        Value="{x:Bind _ZTask.CompletedPercentage,Mode=TwoWay}"
+                                        Margin="0,5,0,0"
+                                        Minimum="0"
+                                        Maximum="100"
+                                        SmallChange="10"
+                                        LargeChange="10"
+                                        StepFrequency="10"
+                                        LostFocus="CompletionPercentageSlider_LostFocus"
+                                        TickFrequency="10"
+                                        TickPlacement="Outside"
+                                        Visibility="Collapsed"
+                                        />
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel Margin="0,0,0,0" >
+                            <TextBlock Text="Status"
+                                       Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+
+                            <Button x:Name="StatusTextButton"
+                                FontSize="14"
+                                Margin="0,10,0,0"
+                                Padding="0"
+                                Style="{StaticResource NoColorChangeTextBlockButtonStyle}">
+                                <Button.Content>
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="{x:Bind helper:ZTaskHelper.ConvertTaskStatusToString(_ZTask.Status),Mode=OneWay}"/>
+                                        <TextBlock Style="{StaticResource ChevronDownSymbolTextBlockStyle}"/>
+                                    </StackPanel>
+                                </Button.Content>
+                                <Button.Flyout>
+                                    <MenuFlyout x:Name="StatusFlyout" Placement="BottomEdgeAlignedLeft">
+                                        <MenuFlyoutItem Text="Open"  Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="In Progress" Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="In Review" Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="To Be Tested"  Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="On Hold"  Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="Deferred"  Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="Closed"  Click="StatusMenuFlyoutItem_Click"/>
+                                        <MenuFlyoutItem Text="Cancelled" Click="StatusMenuFlyoutItem_Click"/>
+                                    </MenuFlyout>
+                                </Button.Flyout>
+                            </Button>
+
+                        </StackPanel>
+                    </controls:AdaptiveGridView>
+
+                    <controls:AdaptiveGridView Grid.Row="6">
+                        <StackPanel>
+                            <TextBlock Text="Start Date" Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <Grid Height="45" Tapped="StartDatePanel_Tapped">
+                                <TextBlock x:Name="StartDateTextBlock"
+                                    Text="{x:Bind helper:TextChangeHelper.GetLongDateString(_ZTask.StartDate),Mode=OneWay}"
+                                           VerticalAlignment="Center"/>
+                                <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                                                    Date="{x:Bind helper:GeneralHelper.CheckDateTimeMinValue(_ZTask.StartDate),Mode=OneWay}"
+                                                    DateChanged="StartDateCalendarDatePicker_DateChanged"
+                                                    Height="40"
+                                                    Width="0"
+                                                    CornerRadius="4"
+                                                    FontWeight="Medium"
+                                                    HorizontalAlignment="Left"/>
+                            </Grid>
+                        </StackPanel>
+                        <StackPanel>
+                            <TextBlock Text="Due Date" 
+                                       Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                            <Grid Height="45" Tapped="DueDatePanel_Tapped">
+                                <TextBlock x:Name="DueDateTextBlock"
+                                    Text="{x:Bind helper:TextChangeHelper.GetLongDateString(_ZTask.EndDate),Mode=OneWay}"
+                                    VerticalAlignment="Center"/>
+                                <CalendarDatePicker x:Name="DueDateCalendarDatePicker"
+                                                    Date="{x:Bind helper:GeneralHelper.CheckDateTimeMinValue(_ZTask.EndDate),Mode=OneWay}"
+                                                    DateChanged="DueDateCalendarDatePicker_DateChanged"
+                                                    Height="40"
+                                                    Width="0"
+                                                    FontWeight="Medium"
+                                                    HorizontalAlignment="Left"
+                                                    Margin="0,0,0,0"/>
+                            
+                            </Grid>
+                        </StackPanel>
+                    </controls:AdaptiveGridView>
+
+                    <StackPanel x:Name="SubTaskPanel"
+                                Grid.Row="7" 
+                                Loaded="SubTaskPanel_Loaded"
+                                Margin="0,20,0,0">
+                        <TextBlock Text="Sub Tasks" 
+                                   Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                        <Grid   BorderBrush="LightGray"
+                                BorderThickness="0"
+                                CornerRadius="4"
+                                Margin="0,10,0,0"
+                                Padding="5">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBox x:Name="SubTaskTextBox"
+                                     KeyDown="SubTaskTextBox_KeyDown"
+                                     Height="40"
+                                     VerticalAlignment="Center"
+                                     Padding="5,8,0,0"
+                                     Margin="0"/>
+                            <StackPanel Grid.Column="1"
+                                        Orientation="Horizontal"
+                                        VerticalAlignment="Center">
+                                <Button x:Name="SubTaskPriorityButton"
+                                        HorizontalAlignment="Center"
+                                        Padding="5,5"
+                                        Foreground="{x:Bind helper:ZTaskHelper.PriorityBrush(SubTaskPriority),Mode=OneWay}"
+                                        Style="{StaticResource NoBGButtonStyle}"
+                                        Margin="5,0"
+                                        Width="20"
+                                        Content="!"
+                                        VerticalAlignment="Center">
+                                    <Button.Flyout>
+                                        <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                                            <MenuFlyoutItem Text="None" Click="SubTaskPriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Low" Click="SubTaskPriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="Medium" Click="SubTaskPriorityMenuFlyoutItem_Click"/>
+                                            <MenuFlyoutItem Text="High" Click="SubTaskPriorityMenuFlyoutItem_Click"/>
+                                        </MenuFlyout>
+                                    </Button.Flyout>
+                                </Button>
+                                <CalendarDatePicker x:Name="SubTaskStartDateCalendarDatePicker"
+                                    DateChanged="SubTaskStartDateCalendarDatePicker_DateChanged"
+                                    PlaceholderText=""
+                                    Width="120"
+                                    Margin="0,0,5,0" />
+                                <CalendarDatePicker x:Name="SubTaskDueDateCalendarDatePicker"
+                                    DateChanged="SubTaskDueDateCalendarDatePicker_DateChanged"
+                                    PlaceholderText=""
+                                    Width="120"/>
+                            </StackPanel>
+                        </Grid>
+
+                        <ListView   x:Name="PlainViewTasksList" 
+                        ItemsSource="{x:Bind _ZTask.SubTaskCollection,Mode=OneWay}" 
+                         ItemContainerStyle="{StaticResource BorderBrushListViewItemRevealStyle}"
+                        SelectionMode="None" 
+                        IsItemClickEnabled="False" 
+                        IsMultiSelectCheckBoxEnabled="False" 
+                        HorizontalContentAlignment="Stretch" 
+                        ScrollViewer.VerticalScrollBarVisibility="Hidden" 
+                        ScrollViewer.VerticalScrollMode="Enabled" >
+
+                            <ListView.ItemTemplate >
+                                <DataTemplate x:DataType="entity:ZSubTask" >
+                                    <taskusercontrol:SubTaskItemControl/>
+                                </DataTemplate>
+                            </ListView.ItemTemplate>
+                            <ListView.ItemContainerTransitions>
+                                <TransitionCollection>
+                                    <RepositionThemeTransition IsStaggeringEnabled="False"/>
+                                </TransitionCollection>
+                            </ListView.ItemContainerTransitions>
+
+                        </ListView>
+                       
+                    </StackPanel>
+
+                    <StackPanel Grid.Row="8" Margin="0,30,0,0">
+                        <TextBlock Text="Description" Style="{StaticResource DetailPanelTitleTextBlockStyle}"/>
+                        <appusercontrol:DescriptionUserControl x:Name="TaskDetailDescriptionControl"
+                                                                Margin="0,10,0,0"/>
+                       
+                    </StackPanel>
+
+                </Grid>
+            </ScrollViewer>
+
+        </Grid>
+    </Grid>
+</Page>

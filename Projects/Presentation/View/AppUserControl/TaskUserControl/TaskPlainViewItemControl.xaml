@@ -1,0 +1,208 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.TaskUserControl.TaskPlainViewItemControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.TaskUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" 
+    xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl" 
+    xmlns:helper="using:Projects.Core.Helper" xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <SwipeItems x:Key="LeftSwipeItemsDelete" Mode="Execute">
+            <SwipeItem Text="Delete" 
+                       Foreground="White"
+                       IconSource="{StaticResource DeleteIcon}" 
+                       Invoked="DeleteSwipeItem_Invoked"
+                       Background="Red"/>
+        </SwipeItems>
+    </UserControl.Resources>
+
+    <SwipeControl Background="{ThemeResource AppMainBackgroundBrush}" 
+                  CornerRadius="4" 
+                  LeftItems="{StaticResource LeftSwipeItemsDelete}">
+        <Grid x:Name="TaskPlainViewItemControlPanel"
+            CornerRadius="4" 
+            Height="45"
+            Margin="0,1" 
+            Padding="10,5,10,3"
+            Loaded="TaskPlainViewItemControlPanel_Loaded"
+            Unloaded="TaskPlainViewItemControlPanel_Unloaded"
+            SizeChanged="TaskPlainViewItemControlPanel_SizeChanged">
+
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition x:Name="CheckBoxColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="TicketColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="PercentageColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="PriorityColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="BriefViewColumnWidth" Width="auto" />
+
+            <ColumnDefinition x:Name="NameColumnWidth" Width="*" />
+
+            <ColumnDefinition x:Name="StatusColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="ProjectColumnWidth" Width="150" />
+
+            <ColumnDefinition x:Name="StartDateColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="DueDateColumnWidth" Width="auto" />
+            <ColumnDefinition x:Name="OwnerColumnWidth" Width="auto" />
+            </Grid.ColumnDefinitions>
+
+            <CheckBox x:Name="TaskSelectCheckBox" 
+                      IsChecked="{x:Bind _ZTask.IsChecked,Mode=TwoWay}"
+                  Checked="TaskSelectCheckBox_Checked"
+                  Unchecked="TaskSelectCheckBox_Unchecked"
+                  Grid.Column="0" 
+                  MinWidth="30"
+                  Visibility="{x:Bind TaskSelectCheckBoxVisibilty,Mode=OneWay}"/>
+
+            <TextBlock  Text="{x:Bind _ZTask.ID}" 
+                    Grid.Column="1" 
+                    Margin="5,0"
+                    MinWidth="15"
+                    HorizontalAlignment="Center"  
+                    VerticalAlignment="Center"/>
+
+
+            <TextBlock  Text="{x:Bind helper:TextChangeHelper.GetPercentageString(_ZTask.CompletedPercentage),Mode=OneWay}" 
+                    Grid.Column="2"  
+                    MinWidth="35"
+                    HorizontalAlignment="Center"
+                    Margin="10,0,0,0"
+                    VerticalAlignment="Center" />
+
+
+            <Button  x:Name="PriorityButton"
+                    Foreground="{x:Bind helper:ZTaskHelper.PriorityBrush(_ZTask.Priority),Mode=OneWay}"
+                    Grid.Column="3" 
+                    HorizontalAlignment="Center"
+                    Padding="5,3"
+                    Style="{StaticResource NoBGButtonStyle}"
+                    Margin="10,0,0,0"
+                    Content="!"
+                    VerticalAlignment="Center">
+                <Button.Flyout>
+                    <MenuFlyout Placement="BottomEdgeAlignedLeft">
+                        <MenuFlyoutItem Text="None" Click="PriorityMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Low" Click="PriorityMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Medium" Click="PriorityMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="High" Click="PriorityMenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+
+            <Button x:Name="BriefViewButton" 
+                Content="&#xE70D;"
+                Grid.Column="4" 
+                FontSize="10" 
+                FontWeight="Bold" 
+                Margin="5,4,0,0" 
+                Padding="5,6,5,5"
+                VerticalAlignment="Center"
+                Style="{StaticResource SymbolNoBGButtonStyle}" >
+
+                <Button.Flyout>
+                    <Flyout x:Name="BriewViewFlyout" Placement="BottomEdgeAlignedLeft"  >
+                        <appusercontrol:TaskBriefViewControl DataContext="{x:Bind _ZTask,Mode=OneWay}"/>
+                    </Flyout>
+                </Button.Flyout>
+            </Button>
+
+
+            <TextBlock  x:Name="NameTextBlock"  
+                    Text="{x:Bind _ZTask.Name,Mode=OneWay}"
+                    FontSize="16"
+                    FontWeight="Medium"
+                    Grid.Column="5" 
+                    HorizontalAlignment="Left" 
+                    Margin="5,0,10,0"
+                    TextTrimming="CharacterEllipsis" 
+                    TextAlignment="Left" 
+                    ToolTipService.Placement="Bottom"
+                    ToolTipService.ToolTip="{x:Bind _ZTask.Name,Mode=OneWay}"
+                    VerticalAlignment="Center" />
+
+            <Button x:Name="StatusButton" 
+                Content="{x:Bind helper:ZTaskHelper.ConvertTaskStatusToString(_ZTask.Status),Mode=OneWay}" 
+                Grid.Column="6" 
+                HorizontalAlignment="Right" 
+                VerticalAlignment="Center"
+                Style="{StaticResource NoBGButtonStyle}"
+                Padding="10,5"
+                Margin="10,0,0,0"
+                MinWidth="60">
+
+                <Button.Flyout>
+                    <MenuFlyout x:Name="StatusFlyout" Placement="BottomEdgeAlignedRight">
+                        <MenuFlyoutItem Text="Open"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="In Progress" Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="In Review" Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="To Be Tested"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="On Hold"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Deferred"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Closed"  Click="StatusMenuFlyoutItem_Click"/>
+                        <MenuFlyoutItem Text="Cancelled" Click="StatusMenuFlyoutItem_Click"/>
+                    </MenuFlyout>
+                </Button.Flyout>
+            </Button>
+
+            <TextBlock  x:Name="ProjectTextBlock" 
+                    Text="{x:Bind _ZTask.Project.Name,Mode=OneWay}" 
+                    Grid.Column="7" 
+                    Margin="5,0,10,0"
+                    HorizontalAlignment="Center" 
+                    TextTrimming="CharacterEllipsis"  
+                    Tapped="ProjectTextBlock_Tapped"
+                    TextAlignment="Center" 
+                    VerticalAlignment="Center"
+                    Visibility="{x:Bind ProjectNameVisibilty,Mode=OneWay}"/>
+
+            <Button  x:Name="StartDateButton" 
+                 Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_ZTask.StartDate),Mode=OneWay}" 
+                 Click="StartDateButton_Click"
+                 Style="{StaticResource NoBGButtonStyle}"
+                 Padding="0,5"
+                Grid.Column="8" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="70">
+            </Button>
+            <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                            DateChanged="StartDateCalendarDatePicker_DateChanged"
+                            Grid.Column="8" 
+                            HorizontalAlignment="Center" 
+                             Date="{x:Bind helper:GeneralHelper.CheckDateTimeMinValue(_ZTask.EndDate),Mode=OneWay}"
+                            Width="0">
+            </CalendarDatePicker>
+
+            <Button x:Name="DueDateButton" 
+               Content="{x:Bind helper:TextChangeHelper.GetShortDateString(_ZTask.EndDate),Mode=OneWay}" 
+                Click="DueDateButton_Click"
+                Style="{StaticResource NoBGButtonStyle}"
+                Padding="0,5"
+                Margin="0,0,0,0"  
+                Grid.Column="9" 
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center"
+                Width="70">
+            </Button>
+            <CalendarDatePicker x:Name="DueDateCalendarDatePicker"
+                            DateChanged="DueDateCalendarDatePicker_DateChanged"
+                            Date="{x:Bind helper:GeneralHelper.CheckDateTimeMinValue(_ZTask.EndDate),Mode=OneWay}"
+                            Grid.Column="8" 
+                            HorizontalAlignment="Center" 
+                            Width="0">
+            </CalendarDatePicker>
+
+            <Grid   Grid.Column="10" 
+                Margin="10,0,0,0"
+                HorizontalAlignment="Center" 
+                VerticalAlignment="Center">
+                <userusercontrol:UserPersonPictureControl DataContext="{x:Bind  _ZTask.Owner,Mode=OneWay}"/>
+            </Grid>
+        </Grid>
+    </SwipeControl>
+
+</UserControl>

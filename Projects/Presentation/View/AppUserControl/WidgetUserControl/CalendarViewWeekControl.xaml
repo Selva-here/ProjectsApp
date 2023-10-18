@@ -1,0 +1,55 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.WidgetUserControl.CalendarViewWeekControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.WidgetUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+
+    <Grid x:Name="MainPanel" 
+          Loaded="MainPanel_Loaded"
+          SizeChanged="MainPanel_SizeChanged" 
+          DragOver="MainPanel_DragOver">
+
+
+        <Grid x:Name="WeekUserControlPanel" >
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column1.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column2.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column3.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column4.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column5.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column6.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+                <ColumnDefinition Width="{x:Bind ScrollViewerPanel_Column7.Width,Mode=TwoWay}" MinWidth="{x:Bind _MinColumnWidth}"/>
+            </Grid.ColumnDefinitions>
+        </Grid>
+        <ScrollViewer HorizontalScrollMode="Disabled"
+                      Margin="0,45,0,0"
+                      VerticalScrollBarVisibility="Hidden"  
+                      VerticalScrollMode="Enabled">
+
+            <Grid x:Name="ScrollViewerPanel" 
+                  AllowDrop="True"  
+                  DragOver="ScrollViewerPanel_DragOver"  
+                  Tapped="ScrollViewerPanel_Tapped">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column1" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column2" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column3" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column4" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column5" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column6" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                    <ColumnDefinition x:Name="ScrollViewerPanel_Column7" Width="*" MinWidth="{x:Bind _MinColumnWidth}"/>
+                </Grid.ColumnDefinitions>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+            </Grid>
+        </ScrollViewer>
+
+
+    </Grid>
+</UserControl>

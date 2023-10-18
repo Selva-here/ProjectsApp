@@ -1,0 +1,211 @@
+﻿<UserControl
+    x:Class="Projects.Presentation.View.AppUserControl.MilestoneUserControl.AddNewMilestoneContentControl"
+    xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+    xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+    xmlns:local="using:Projects.Presentation.View.AppUserControl.MilestoneUserControl"
+    xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+    xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006" xmlns:entity="using:Projects.Core.Entity" xmlns:controls="using:Microsoft.Toolkit.Uwp.UI.Controls" xmlns:entityobj="using:Projects.Core.EntityObj" xmlns:userusercontrol="using:Projects.Presentation.View.AppUserControl.UserUserControl" xmlns:appusercontrol="using:Projects.Presentation.View.AppUserControl"
+    mc:Ignorable="d"
+    d:DesignHeight="300"
+    d:DesignWidth="400">
+    <UserControl.Resources>
+        <Style TargetType="TextBlock" x:Name="AddPanelTitleTextBlockStyle">
+            <Setter Property="FontWeight" Value="SemiLight"/>
+            <Setter Property="FontSize" Value="14"/>
+        </Style>
+        <Style TargetType="TextBlock" x:Key="UnavoidableTextBlockStyle">
+            <Setter Property="Foreground" Value="Red"/>
+            <Setter Property="Margin" Value="3,0"/>
+            <Setter Property="Text" Value="*"/>
+        </Style>
+    </UserControl.Resources>
+
+    <Grid Background="{ThemeResource AppMainBackgroundBrush}" Padding="10,0,20,10">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="auto"/>
+        </Grid.RowDefinitions>
+
+        <ScrollViewer HorizontalScrollMode="Disabled"
+                      VerticalScrollBarVisibility="Hidden"
+                      VerticalScrollMode="Enabled">
+            <Grid >
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                    <RowDefinition Height="auto"/>
+                </Grid.RowDefinitions>
+
+                <StackPanel Grid.Row="0" Margin="0,20,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock 
+                        Text="Title"
+                            Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                        <TextBlock Style="{StaticResource UnavoidableTextBlockStyle}" />
+                    </StackPanel>
+                    <TextBox    x:Name="MilestoneNameTextBox"
+                                FontSize="14"
+                                Height="40"
+                                Margin="0,10,0,0"
+                                Padding="10,8,0,0"
+                                HorizontalAlignment="Stretch"
+                                VerticalContentAlignment="Center"
+                                />
+                </StackPanel>
+                
+                <StackPanel Grid.Row="1" Margin="0,20,0,0">
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock 
+                            Text="Project"
+                            Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                        <TextBlock Style="{StaticResource UnavoidableTextBlockStyle}" />
+                    </StackPanel>
+                    <Grid>
+                        <AutoSuggestBox x:Name="ProjectSelectionAutoSuggestBox"
+                                        FontSize="14"
+                                        Height="40"
+                                        HorizontalAlignment="Stretch"
+                                        Margin="0,10,0,0"
+                                        LostFocus="ProjectSelectionAutoSuggestBox_LostFocus"
+                                        QuerySubmitted="ProjectSelectionAutoSuggestBox_QuerySubmitted"
+                                        SuggestionChosen="ProjectSelectionAutoSuggestBox_SuggestionChosen"
+                                        TextChanged="ProjectSelectionAutoSuggestBox_TextChanged"
+                                        VerticalContentAlignment="Center">
+                            
+                            <AutoSuggestBox.ItemTemplate >
+                                <DataTemplate x:DataType="entityobj:ProjectObj" >
+                                    <Grid Padding="0,13">
+                                        <TextBlock Text="{x:Bind Name}"/>
+                                    </Grid>
+                                </DataTemplate>
+
+                            </AutoSuggestBox.ItemTemplate>
+                        </AutoSuggestBox>
+                        <Grid Height="50" >
+                            <TextBlock x:Name="SelectedProjectNameTextBlock"
+                                       Text="{x:Bind SelectedProject.Name,Mode=OneWay}"
+                                       Tapped="SelectedProjectNameTextBlock_Tapped"
+                                       VerticalAlignment="Center"
+                                       Visibility="Collapsed"/>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+                
+                <StackPanel Grid.Row="2" Margin="0,20,0,0">
+
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="Owner"
+                            Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                        <TextBlock Style="{StaticResource UnavoidableTextBlockStyle}" />
+                    </StackPanel>
+
+                    <Grid Height="50">
+                        <AutoSuggestBox Name="UserSelectionAutoSuggestBox"
+                                        IsEnabled="False"
+                                        FontSize="14"
+                                        Height="40"
+                                        HorizontalAlignment="Stretch"
+                                        Margin="0,10,0,0"
+                                        LostFocus="UserSelectionAutoSuggestBox_LostFocus"
+                                        QuerySubmitted="UserSelectionAutoSuggestBox_QuerySubmitted"
+                                        SuggestionChosen="UserSelectionAutoSuggestBox_SuggestionChosen"
+                                        TextChanged="UserSelectionAutoSuggestBox_TextChanged"
+                                        VerticalContentAlignment="Center"
+                                        Visibility="Collapsed">
+                            
+                            <AutoSuggestBox.ItemTemplate >
+                                <DataTemplate x:DataType="entity:ZUser" >
+
+                                    <userusercontrol:UserAutoSuggestionBoxSuggestionItemTemplateControl />
+
+                                </DataTemplate>
+                            </AutoSuggestBox.ItemTemplate>
+                        </AutoSuggestBox>
+                        
+                        <Grid x:Name="SelectedOwnerPanel" Visibility="Visible" Margin="0,10,0,0">
+                            <userusercontrol:UserPersonPictureControl DataContext="{x:Bind SelectedOwner,Mode=OneWay}"
+                                                                      ControlHeight="30"
+                                                                      HorizontalAlignment="Left"
+                                                                      Visibility="Visible"/>
+                            <TextBlock Text="{x:Bind SelectedOwner.Name,Mode=OneWay}"
+                                       Tapped="SelectedOwnerNameTextBlock_Tapped"
+                                       Margin="40,0,0,0"
+                                       VerticalAlignment="Center"/>
+                        </Grid>
+                    </Grid>
+                </StackPanel>
+                
+                <controls:AdaptiveGridView  DesiredWidth="650"
+                                            Grid.Row="3"
+                                            HorizontalAlignment="Stretch"
+                                            IsItemClickEnabled="False"
+                                            Margin="0,0,-20,0"
+                                            OneRowModeEnabled="False"
+                                            ScrollViewer.VerticalScrollMode="Disabled"
+                                            ScrollViewer.HorizontalScrollMode="Disabled"
+                                            SelectionMode="None"
+                                            StretchContentForSingleRow="False" >
+
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="Start Date"
+                            Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                           
+                        </StackPanel>
+                        <CalendarDatePicker x:Name="StartDateCalendarDatePicker"
+                                            DateChanged="StartDateCalendarDatePicker_DateChanged"
+                                            Height="40"
+                                            CornerRadius="4"
+                                            FontWeight="Medium"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="0,10,0,0"/>
+                    </StackPanel>
+                    <StackPanel>
+                        <StackPanel Orientation="Horizontal">
+                            <TextBlock Text="End Date"
+                            Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                            
+                        </StackPanel>
+                        <CalendarDatePicker x:Name="EndDateCalendarDatePicker"
+                                            DateChanged="EndDateCalendarDatePicker_DateChanged"
+                                            Height="40"
+                                            CornerRadius="4"
+                                            FontWeight="Medium"
+                                            HorizontalAlignment="Stretch"
+                                            Margin="0,10,0,0"/>
+                    </StackPanel>
+                    <GridView.ItemContainerStyle>
+                        <Style TargetType="GridViewItem" BasedOn="{StaticResource GridViewItemExpanded}">
+                            <Setter Property="Margin" Value="0,20,20,0"/>
+                            <Setter Property="HorizontalAlignment" Value="Stretch"/>
+                        </Style>
+                    </GridView.ItemContainerStyle>
+                </controls:AdaptiveGridView>
+
+                <StackPanel Grid.Row="4"
+                        Margin="0,20,0,0">
+                    <TextBlock HorizontalAlignment="Left" 
+                               Text="Description"
+                                   Style="{StaticResource AddPanelTitleTextBlockStyle}"/>
+                    <appusercontrol:DescriptionUserControl x:Name="AddNewMilestoneDescriptionControl"
+                                                                           Margin="0,10,0,0"/>
+                </StackPanel>
+
+            </Grid>
+        </ScrollViewer>
+
+        <Button x:Name="SaveButton"
+                   Content="Save"
+                   Click="SaveButton_Click"
+                    Grid.Row="1"
+                   Margin="0,15,0,15"
+                   Height="35"
+                   HorizontalAlignment="Right"
+                   Style="{StaticResource AccentButtonStyle}"
+                   VerticalAlignment="Bottom"
+                   Width="150"/>
+    </Grid>
+
+</UserControl>
